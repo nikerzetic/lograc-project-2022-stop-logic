@@ -1,12 +1,59 @@
-# Skeleton repository for the Logika v računalništvu student projects
+#  General Topology - Logika v računalništvu student project
 
-This repository is set up as an Agda library and it contains:
+## Project Roadmap
 
-* `lograc-project.agda-lib`: the library configuration file which contains
-  the list of file system paths that Agda should include
+### Baseline
+- [ ] topology
+- [ ] topological space
+- [ ] concrete examples
+  - [ ] trivial topology
+  - [ ] discreet topology
+  - [ ] cofinite topology
+- [ ] continous map
+- [ ] homeomorphism
+- [ ] basis
+- [ ] subbasis
+- [ ] covering
+- [ ] density
+- [ ] subspaces
+- [ ] induced topology
+- [ ] regular space
 
-* `agda-stdlib/`: Agda standard library as a git submodule
+### Main Goal
+- [ ] alternative characterisation for continous maps
+- [ ] characterisation of homomorphism
+- [ ] first countable spaces
+- [ ] second countable spaces
+- [ ] separable spaces
+- [ ] separation axioms
+- [ ] basis
+- [ ] projections are open and continuous 
+- [ ] compact spaces
 
-* `agda-categories/`: Agda categories library as a git submodule
+### Abvove and Beyond
+- [ ] basis and maps theorem - checking for continuity
+- [ ] basis generationg topology
+- [ ] product topology
+- [ ] properties of a Housdorff space
 
-* `project/`: the top-level source code directory for your Agda code
+### Self Harm
+- [ ] real numbers
+- [ ] T3 1/2 and upper
+- [ ] metric spaces 
+- [ ] normal spaces
+- [ ] connected spaces
+- [ ] weak topology
+
+### Absolute Hell
+- [ ] homotopy
+- [ ] fibres
+- [ ] cover spaces
+- [ ] homology (just basics)
+- [ ] cohomology (just basics)
+- [ ] manifolds
+- [ ] 
+
+### Hahaha
+- [ ] existance of non-triangulatable Manifolds
+- [ ] all of the above
+- [ ] learning agda
