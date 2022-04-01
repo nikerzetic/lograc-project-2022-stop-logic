@@ -15,17 +15,17 @@ open import Topology.PowerSet
 -- Topology on a set X
 record topology {ℓ} (X : Set ℓ) : Setω₁ where
     field
-        Ω : PSet (PSet X) -- the subsetset of open subsets of X
-        -- zamenjal 𝒪 z Ω, ker VS Code prvega razume kot dva znaka in zato linter ne dela
-        ∅-open : empty X ∈ Ω
-        full-open : full X ∈ Ω
-        ∩-open : ∀ U V → U ∈ Ω → V ∈ Ω → U ∩ V ∈ Ω
-        union-open : ∀ {ℓ : Level} {I : Set ℓ} (S : I → PSet X) → (∀ i → S i ∈ Ω) → union S ∈ Ω
+        τ : ℙ (ℙ X) -- the subsetset of open subsets of X
+        -- zamenjal 𝒪 z τ, ker VS Code prvega razume kot dva znaka in zato linter ne dela
+        ∅-open : empty X ∈ τ
+        full-open : full X ∈ τ
+        ∩-open : ∀ U V → U ∈ τ → V ∈ τ → U ∩ V ∈ τ
+        union-open : ∀ {ℓ : Level} {I : Set ℓ} (S : I → ℙ X) → (∀ i → S i ∈ τ) → union S ∈ τ
 
 discrete-topology : {ℓ : Level} (X : Set ℓ) → topology X
 discrete-topology X =
     record
-        { Ω = λ _ → ⊤ᵖ
+        { τ = λ _ → ⊤ᵖ
         ; ∅-open = ⊤ᵖ-intro
         ; full-open = ⊤ᵖ-intro
         ; ∩-open = λ _ _ _ _ → ⊤ᵖ-intro
@@ -35,7 +35,7 @@ discrete-topology X =
 indiscrete-topology : {ℓ : Level} (X : Set ℓ) → topology X
 indiscrete-topology X =
     record
-        { Ω = λ U → ∃ᵖ U → ∀ᵖ U
+        { τ = λ U → ∃ᵖ U → ∀ᵖ U
         ; ∅-open = λ p → ⊥ᵖ-elim (∃ᵖ-elim (λ { a ()}) p)
         ; full-open = λ p → ∀ᵖ-intro (λ _ → ⊤ᵖ-intro)
         ; ∩-open =
