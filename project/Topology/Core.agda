@@ -15,12 +15,12 @@ open import Topology.PowerSet
 -- Topology on a set X
 record topology {ℓ} (X : Set ℓ) : Setω₁ where
     field
-        Ω : PSet (PSet X) -- the subsetset of open subsets of X
+        Ω : ℙ (ℙ X) -- the subsetset of open subsets of X
         -- zamenjal 𝒪 z Ω, ker VS Code prvega razume kot dva znaka in zato linter ne dela
         ∅-open : empty X ∈ Ω
         full-open : full X ∈ Ω
         ∩-open : ∀ U V → U ∈ Ω → V ∈ Ω → U ∩ V ∈ Ω
-        union-open : ∀ {ℓ : Level} {I : Set ℓ} (S : I → PSet X) → (∀ i → S i ∈ Ω) → union S ∈ Ω
+        union-open : ∀ {ℓ : Level} {I : Set ℓ} (S : I → ℙ X) → (∀ i → S i ∈ Ω) → union S ∈ Ω
 
 discrete-topology : {ℓ : Level} (X : Set ℓ) → topology X
 discrete-topology X =
