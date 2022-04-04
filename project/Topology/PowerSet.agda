@@ -17,9 +17,6 @@ open import Topology.Logic
 ℙ : {ℓ : Level} → Set ℓ → Set (lsuc lzero ⊔ ℓ)
 ℙ A = A → Prop
 
--- McP v VS Code ne deluje pravilno (razume ga kot dva znaka). 
--- Alternative za potencno mnozico: Γ ß § ℙ ¶ ℙ (Gamma ss S P)
-
 infix 3 _∈_
 _∈_ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → Prop
 x ∈ S = S x

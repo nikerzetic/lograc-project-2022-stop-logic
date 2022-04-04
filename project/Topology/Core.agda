@@ -16,7 +16,6 @@ open import Topology.PowerSet
 record topology {ℓ} (X : Set ℓ) : Setω₁ where
     field
         τ : ℙ (ℙ X) -- the subsetset of open subsets of X
-        -- zamenjal 𝒪 z τ, ker VS Code prvega razume kot dva znaka in zato linter ne dela
         ∅-open : empty X ∈ τ
         full-open : full X ∈ τ
         ∩-open : ∀ U V → U ∈ τ → V ∈ τ → U ∩ V ∈ τ
