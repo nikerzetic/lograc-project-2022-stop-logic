@@ -13,21 +13,30 @@ open import Relation.Binary.PropositionalEquality
 open import Data.Bool
 open import Topology.Logic
 
+------------------------------------------------------------------------
+
+infix 4 _∩_
+infix 3 _∈_
+infix 3 _⊆_ 
+
+------------------------------------------------------------------------
+
 -- Powerset
 ℙ : {ℓ : Level} → Set ℓ → Set (lsuc lzero ⊔ ℓ)
 ℙ A = A → Prop
 
-infix 3 _∈_
 _∈_ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → Prop
 x ∈ S = S x
 
 -- The empty subset
-empty : {ℓ : Level} (X : Set ℓ) → ℙ X
+empty : {ℓ : Level} (A : Set ℓ) → ℙ A
 empty _ _ = ⊥ᵖ
 
 -- The full subset
-full : {ℓ : Level} (X : Set ℓ) → ℙ X
+full : {ℓ : Level} (A : Set ℓ) → ℙ A
 full _ _ = ⊤ᵖ
+
+-- ??? ℙ X je preslikava iz X v Prop
 
 -- Subset relation
 _⊆_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop ℓ
