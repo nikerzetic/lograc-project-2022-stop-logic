@@ -36,11 +36,13 @@ empty _ _ = ⊥ᵖ
 full : {ℓ : Level} (A : Set ℓ) → ℙ A
 full _ _ = ⊤ᵖ
 
--- ??? ℙ X je preslikava iz X v Prop
-
 -- Subset relation
 _⊆_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop ℓ
 S ⊆ T = ∀ x → x ∈ S → x ∈ T
+
+-- Equality relation that returns Prop
+_≡ᵖ_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop
+S ≡ᵖ T = ⟪ S ⊆ T ⟫ ∧ᵖ ⟪ T ⊆ S ⟫
 
 -- Subset extensionality
 postulate subset-ext : {ℓ : Level} {A : Set ℓ} {S T : ℙ A} → (∀ x → S x ≡ T x) → S ≡ T
@@ -55,6 +57,11 @@ union S x = ∃ᵖ (λ i → x ∈ S i)
 -- Binary intersection
 _∩_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → ℙ A
 U ∩ V = λ x → U x ∧ᵖ V x
+
+-- Subfamily 
+subfamily : {ℓ k : Level} {I J : Set ℓ} {A : Set k} 
+    → (I → ℙ A) → ((x : J) → x ∈ I) → (J → ℙ A)
+subfamily = {!   !}
 
 -- Countable set
 -- record countable₁ {ℓ} (A : Set ℓ) = Set where 
