@@ -55,3 +55,14 @@ union S x = ∃ᵖ (λ i → x ∈ S i)
 -- Binary intersection
 _∩_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → ℙ A
 U ∩ V = λ x → U x ∧ᵖ V x
+
+-- Countable set
+-- record countable₁ {ℓ} (A : Set ℓ) = Set where 
+-- -- ??? Setω₁ 
+--     field 
+--         ϕ = {!   !}
+--         ϕ-injective = {!   !}
+
+-- countable₂ : ?
+-- countable₂ A = empty A → ⊤ᵖ
+-- countable₂ A = empty A → ⊤ᵖ
