@@ -61,12 +61,12 @@ base : {ℓ : Level} {X : Set ℓ} {I : Set}
     -- → (∀ i j → (∃ᵖ λ k → (k ∈ I)) → (B i) ∩ (B j) ∈ (B k)) 
     -- → (∀ i j → ∃[ I ] k → (B i) ∩ (B j) ∈ (B k)) 
     -- → (∀ i j → ∃ᵖ λ k → ((B i ∩ B j) ⊆-⊇-≡ B k))
-    → (∀ i j → ∃ᵖ (λ k →   (B i ∩ B j) ≡ᵖ B k )) 
+    → (∀ i j → ∃ᵖ (λ k → (B i ∩ B j) ≡ᵖ B k )) 
     → topology X
 base B cov inter = 
     record
-        { -- τ = λ U → {!  ∃ᵖ U ≡ᵖ union B'!}
-        τ = λ U → {!  ∃ᵖ U ≡ᵖ union B'!}
+        { -- τ = λ U → {!  ∃ᵖ λ B' → subfamily B B' →  U ≡ᵖ union B'!}
+        τ = λ U → {!  ∃ᵖ (λ J → union ) U ≡ᵖ union B'!}
         ; ∅-open = {!   !}
         ; ∩-open = λ U V p q → {!   !}
         -- ∀ᵖ-intro (inter p q)

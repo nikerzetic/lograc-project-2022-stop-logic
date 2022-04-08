@@ -30,11 +30,11 @@ x ∈ S = S x
 
 -- The empty subset
 empty : {ℓ : Level} (A : Set ℓ) → ℙ A
-empty _ _ = ⊥ᵖ
+empty _ = λ _ → ⊥ᵖ
 
 -- The full subset
 full : {ℓ : Level} (A : Set ℓ) → ℙ A
-full _ _ = ⊤ᵖ
+full _ = λ _ → ⊤ᵖ
 
 -- Subset relation
 _⊆_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop ℓ
@@ -50,6 +50,14 @@ postulate subset-ext : {ℓ : Level} {A : Set ℓ} {S T : ℙ A} → (∀ x → 
 ⊆-⊇-≡ : {ℓ : Level} {A : Set ℓ} (S T : ℙ A) → S ⊆ T → T ⊆ S → S ≡ T
 ⊆-⊇-≡ S T S⊆T T⊆S = subset-ext λ x → prop-ext (S⊆T x) (T⊆S x)
 
+-- -- Family of sets
+-- data family {ℓ k : Level} : ?
+--     -- base :  → (I : Set ℓ) → (A : Set k) → (I → ℙ A)
+--     cons : I → A → (I → ℙ A)
+
+set : {ℓ : Level} → (A : Set ℓ) → ℙ A 
+set A = λ (x : A) → ⊤ᵖ
+
 -- Union of a family
 union : {ℓ k : Level} {I : Set ℓ} {A : Set k} → (I → ℙ A) → ℙ A
 union S x = ∃ᵖ (λ i → x ∈ S i)
@@ -59,9 +67,12 @@ _∩_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → ℙ A
 U ∩ V = λ x → U x ∧ᵖ V x
 
 -- Subfamily 
-subfamily : {ℓ k : Level} {I J : Set ℓ} {A : Set k} 
-    → (I → ℙ A) → ((x : J) → x ∈ I) → (J → ℙ A)
-subfamily = {!   !}
+-- subfamily : 
+--     {ℓ k : Level} {I J : Set ℓ} {A : Set k} 
+--     → (I → ℙ A) 
+--     → (set J ⊆ set I)
+--     → (J → ℙ A)
+-- subfamily = ?
 
 -- Countable set
 -- record countable₁ {ℓ} (A : Set ℓ) = Set where 
