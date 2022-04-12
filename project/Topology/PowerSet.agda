@@ -81,6 +81,9 @@ U ∩ V = λ x → U x ∧ᵖ V x
 --         ϕ = {!   !}
 --         ϕ-injective = {!   !}
 
+ext : ?
+ext J = Σ i : I , i ∈ J
+
 -- countable₂ : ?
 -- countable₂ A = empty A → ⊤ᵖ
 -- countable₂ A = empty A → ⊤ᵖ
