@@ -16,18 +16,28 @@ open import Topology.Core
 
 ------------------------------------------------------------------------
 
--- Function image and preimage
-_ₓ_ : {!  {ℓ : Level} {X Y : Set ℓ} → (f : X → Y) → ℙ X !}
-f ₓ U = {!   !}
+-- -- Function image and preimage
+-- _ₓ_ : {!  {ℓ : Level} {X Y : Set ℓ} → (f : X → Y) → ℙ X !}
+-- f ₓ U = {!   !}
 
-_ˣ_ : {!   !}
-f ˣ V = {!   !} 
+-- _ˣ_ : {!   !}
+-- f ˣ V = {!   !} 
 
--- record continuous-map {ℓ} (X Y : Set ℓ) (f : X → Y) : Setω₁ where
---      field
---         τ-domain : topology X
---         τ-codomain : topology Y
---         preimage-preserves-opens : ∀ U → U ∈ τ-codomain.τ → f ^* U ∈ τ-domain 
+preimage : {ℓ : Level} {X Y : Set ℓ} 
+   → (f : (ℙ X) →  (ℙ Y))
+   → {f^-1 : (ℙ Y) →  (ℙ X)}
+   → {∀ (U : ℙ Y) → ((f (f^-1 U)) ≡ᵖ U)}
+   → ℙ Y 
+   → ℙ X
+preimage f {f-1} Y = f-1 Y
 
---         f_* (f^* A) = A
-        
+image : {ℓ : Level} → {X Y : Set ℓ} → (f : (ℙ X) → (ℙ Y)) → ℙ X → ℙ Y
+image f X = f X
+
+record continuous-map {ℓ} (X Y : Set ℓ) (f : (ℙ X) → (ℙ Y)) : Setω₁ where
+     field
+        τ-domain : topology X
+        τ-codomain : topology Y
+        preimagePreservesOpens : ∀ U → U ∈ (topology.τ τ-codomain) → (preimage f U) ∈ (topology.τ τ-domain) 
+
+
