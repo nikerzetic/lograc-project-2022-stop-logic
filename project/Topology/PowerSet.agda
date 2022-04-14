@@ -30,7 +30,7 @@ x ∈ S = S x
 
 -- The empty subset
 empty : {ℓ : Level} (A : Set ℓ) → ℙ A
-empty _ _ = ⊥ᵖ
+empty A  = λ a → ⊥ᵖ
 
 -- The full subset
 full : {ℓ : Level} (A : Set ℓ) → ℙ A
@@ -58,10 +58,12 @@ union S x = ∃ᵖ (λ i → x ∈ S i)
 _∩_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → ℙ A
 U ∩ V = λ x → U x ∧ᵖ V x
 
--- Subfamily 
-subfamily : {ℓ k : Level} {I J : Set ℓ} {A : Set k} 
-    → (I → ℙ A) → ((x : J) → x ∈ I) → (J → ℙ A)
-subfamily = {!   !}
+-- -- Subfamily 
+-- subfamily : {ℓ k : Level} {U : Set ℓ } {J I : ℙ U} {A : Set k} 
+--     → (I → ℙ A) 
+--     → ( {! full J  !} ⊆ full I) 
+--     → (J → ℙ A) 
+-- subfamily = {!   !}
 
 -- Countable set
 -- record countable₁ {ℓ} (A : Set ℓ) = Set where 

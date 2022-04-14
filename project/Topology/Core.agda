@@ -12,6 +12,7 @@ open import Agda.Primitive
 open import Topology.Logic
 open import Topology.PowerSet
 open import Relation.Binary.PropositionalEquality
+open import Function.Base 
 
 ------------------------------------------------------------------------
 -- Topology on a set X
@@ -54,7 +55,7 @@ indiscrete-topology X =
         }
 
 
-
+-- Proof that B is a base for topology T
 baseForTopology : {ℓ : Level} {X : Set ℓ} {I J : Set} 
     → (B : I → (ℙ X))
     → (T : topology X)
@@ -62,25 +63,19 @@ baseForTopology : {ℓ : Level} {X : Set ℓ} {I J : Set}
 -- baseForTopology {I = I} B T = topology.τ T (union B)
 baseForTopology {X = X} {I = I} {J = J} B T = 
     (∀ (i : I) → B i ∈ topology.τ T) ∧ᵖ 
-    ( ∀ (U : topology.τ T) → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B r)))
+    ( ⟪ (∀ U → U ∈ (topology.τ T) → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B ∘ r))) ⟫)
 
--- topologyFromBase : {ℓ : Level} {I J : Set} {X : Set ℓ} 
---     → (B : I → (ℙ X))
---     → (T : topology X)
---     → {!   !} 
--- topologyFromBase B T = {! λ U → ∀ U ∈ B → ∃ᵖ (r : J → I) → U ⊆-⊇-≡ union (B r) !}
 
--- base : {ℓ : Level} {X : Set ℓ} {I J : Set} 
---     → (B : I → (ℙ X))
---     → (r : Set → I)
---     → ((x : X) → x ∈ union B)
---     → (∀ i j → ∃ᵖ (λ k → (B i ∩ B j) ≡ᵖ B k )) 
---     → topology X
--- base {J = J} B r cov inter = 
---     record 
---         {
---         τ =  λ U →  U ⊆ (B (r J)) 
---         ; ∅-open = {!   !}
---         ; ∩-open = {!   !}
---         ; union-open = {!   !}
---         }  
+baseGeneratedTopology : {ℓ : Level} {X : Set ℓ} {I J : Set} 
+    → (B : I → (ℙ X))
+    → ((x : X) → x ∈ union B)
+    → (∀ i j → ∃ᵖ (λ k → (B i ∩ B j) ≡ᵖ B k )) 
+    → topology X
+baseGeneratedTopology {I = I} {J = J} B cov inter = 
+    record 
+        {
+        τ =  λ U → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B ∘ r)) 
+        ; ∅-open = {! λ U → ∀ r → (r : empty J → I) → empty U ≡ᵖ union (B ∘ r)!}
+        ; ∩-open = {!   !}
+        ; union-open = {!   !}
+        }  
