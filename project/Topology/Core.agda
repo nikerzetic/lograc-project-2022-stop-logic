@@ -55,12 +55,14 @@ indiscrete-topology X =
 
 
 
-baseForTopology : {ℓ : Level} {X : Set ℓ} {I : Set} 
+baseForTopology : {ℓ : Level} {X : Set ℓ} {I J : Set} 
     → (B : I → (ℙ X))
     → (T : topology X)
     → Prop
-baseForTopology {I = I} B T = topology.τ T (union B)
--- baseForTopology {I = I} B T = ∀ (i : I) → B i ∈ topology.τ T
+-- baseForTopology {I = I} B T = topology.τ T (union B)
+baseForTopology {X = X} {I = I} {J = J} B T = 
+    (∀ (i : I) → B i ∈ topology.τ T) ∧ᵖ 
+    ( ∀ (U : topology.τ T) → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B r)))
 
 -- topologyFromBase : {ℓ : Level} {I J : Set} {X : Set ℓ} 
 --     → (B : I → (ℙ X))
