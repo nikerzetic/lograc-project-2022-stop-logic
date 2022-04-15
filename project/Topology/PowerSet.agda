@@ -30,11 +30,11 @@ x ∈ S = S x
 
 -- The empty subset
 empty : {ℓ : Level} (A : Set ℓ) → ℙ A
-empty A  = λ a → ⊥ᵖ
+empty A  = λ x → ⊥ᵖ
 
 -- The full subset
 full : {ℓ : Level} (A : Set ℓ) → ℙ A
-full _ _ = ⊤ᵖ
+full A = λ x → ⊤ᵖ
 
 -- Subset relation
 _⊆_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop ℓ
@@ -57,6 +57,9 @@ union S x = ∃ᵖ (λ i → x ∈ S i)
 -- Binary intersection
 _∩_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → ℙ A
 U ∩ V = λ x → U x ∧ᵖ V x
+
+-- ∈-∩-∈ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → P A → Prop
+-- ∈-∩-∈ (x ∈ (A ∩ B)) = x ∈ A
 
 -- -- Subfamily 
 -- subfamily : {ℓ k : Level} {U : Set ℓ } {J I : ℙ U} {A : Set k} 
