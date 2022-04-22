@@ -62,8 +62,8 @@ baseForTopology : {ℓ : Level} {X : Set ℓ} {I J : Set}
     → Prop
 -- baseForTopology {I = I} B T = topology.τ T (union B)
 baseForTopology {X = X} {I = I} {J = J} B T = 
-    (∀ (i : I) → B i ∈ topology.τ T) ∧ᵖ 
-    ( ⟪ (∀ U → U ∈ (topology.τ T) → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B ∘ r))) ⟫)
+    ( ∀ (i : I) → B i ∈ topology.τ T ) ∧ᵖ 
+    ( ⟪ (∀ U → U ∈ (topology.τ T) → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B ∘ r))) ⟫ )
 
 
 baseGeneratedTopology : {ℓ : Level} {X : Set ℓ} {I J : Set} 
@@ -75,7 +75,8 @@ baseGeneratedTopology {I = I} {J = J} B cov inter =
     record 
         {
         τ =  λ U → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B ∘ r)) 
-        ; ∅-open = {! λ U → ∀ r → (r : empty J → I) → empty U ≡ᵖ union (B ∘ r)!}
+        ; ∅-open = {!   !}
+        ; full-open = {!   !}         
         ; ∩-open = {!   !}
-        ; union-open = {!   !}
+        ; union-open = λ B → {!   !}
         }  
