@@ -62,8 +62,8 @@ baseForTopology : {ℓ : Level} {X : Set ℓ} {I J : Set}
     → Prop
 -- baseForTopology {I = I} B T = topology.τ T (union B)
 baseForTopology {X = X} {I = I} {J = J} B T = 
-    (∀ (i : I) → B i ∈ topology.τ T) ∧ᵖ 
-    ( ⟪ (∀ U → U ∈ (topology.τ T) → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B ∘ r))) ⟫)
+    ( ∀ (i : I) → B i ∈ topology.τ T ) ∧ᵖ 
+    ( ⟪ (∀ U → U ∈ (topology.τ T) → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B ∘ r))) ⟫ )
 
 
 baseGeneratedTopology : {ℓ : Level} {X : Set ℓ} {I J : Set} 

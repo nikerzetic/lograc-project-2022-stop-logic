@@ -53,8 +53,10 @@ data _∨ᵖ_ : Prop → Prop → Prop where
 ∧ᵖ-elim₂ : {p q : Prop} → p ∧ᵖ q → q
 ∧ᵖ-elim₂ (∧ᵖ-intro a b) = b
 
--- ∨ᵖ-elim : {p q : Prop} →  p ∨ᵖ q → ?
-    
+∨ᵖ-elim : {p q r : Prop} → p ∨ᵖ q → (p → r) → (q → r) → r
+∨ᵖ-elim (∨ᵖ-intro₁ p) p-holds _ = p-holds p
+∨ᵖ-elim (∨ᵖ-intro₂ q) _ q-holds = q-holds q
+
 -- Universal quantifier
 ∀ᵖ : {ℓ : Level} {A : Set ℓ} → (A → Prop) → Prop
 ∀ᵖ p = ⟪ (∀ x → p x) ⟫
