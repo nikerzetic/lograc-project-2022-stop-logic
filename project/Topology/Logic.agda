@@ -41,6 +41,7 @@ record ⊤ᵖ : Prop where
 data _∧ᵖ_ : Prop → Prop → Prop where
     ∧ᵖ-intro : {p q : Prop} → p → q → p ∧ᵖ q
 
+
 -- Disjunction
 data _∨ᵖ_ : Prop → Prop → Prop where
     ∨ᵖ-intro₁ : {p q : Prop} → p → p ∨ᵖ q

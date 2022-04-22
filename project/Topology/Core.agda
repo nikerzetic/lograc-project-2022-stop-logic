@@ -50,8 +50,8 @@ indiscrete-topology X =
             λ S Si-open p →
             ∀ᵖ-intro (λ x →
                 ∃ᵖ-elim (λ y a∈∪S →
-                ∃ᵖ-elim (λ i y∈Si →
-                    ∃ᵖ-intro (∀ᵖ-elim (Si-open i (∃ᵖ-intro y∈Si)) x)) a∈∪S) p)
+                    ∃ᵖ-elim (λ i y∈Si →
+                        ∃ᵖ-intro (∀ᵖ-elim (Si-open i (∃ᵖ-intro y∈Si)) x)) a∈∪S) p)
         }
 
 
@@ -71,12 +71,26 @@ baseGeneratedTopology : {ℓ : Level} {X : Set ℓ} {I J : Set}
     → ((x : X) → x ∈ union B)
     → (∀ i j → ∃ᵖ (λ k → (B i ∩ B j) ≡ᵖ B k )) 
     → topology X
-baseGeneratedTopology {I = I} {J = J} B cov inter = 
+baseGeneratedTopology {X = X} {I = I} {J = J} B cov inter = 
     record 
         {
         τ =  λ U → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B ∘ r)) 
-        ; ∅-open = {!   !}
-        ; full-open = {!   !}         
-        ; ∩-open = {!   !}
-        ; union-open = λ B → {!   !}
+        ; ∅-open = {! λ U → ∀ r → (r : J → empty J → I) → empty U ≡ᵖ union (B ∘ r)!}
+        ; full-open = 
+            ∃ᵖ-intro (
+                ∧ᵖ-intro 
+                {! λ x → x ∈ (full X) →  !}
+                --  ⟪ (λ x → x ∈ (full X) →  (cov x)) ⟫
+                {!   !})
+        ; ∩-open = λ U V U-open V-open → 
+            ∃ᵖ-intro (
+                ∧ᵖ-intro 
+                (∀ᵖ-intro λ x p → {!   !}
+                -- (? ∈ ?) 
+                -- ∧ᵖ-elim₁ {!   !}
+                )
+                (∀ᵖ-intro λ x p → {!   !})
+            )
+        -- U-open U V-open V
+        ; union-open = {!   !}
         }  
