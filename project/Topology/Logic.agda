@@ -41,11 +41,20 @@ record ⊤ᵖ : Prop where
 data _∧ᵖ_ : Prop → Prop → Prop where
     ∧ᵖ-intro : {p q : Prop} → p → q → p ∧ᵖ q
 
+
 -- Disjunction
 data _∨ᵖ_ : Prop → Prop → Prop where
     ∨ᵖ-intro₁ : {p q : Prop} → p → p ∨ᵖ q
     ∨ᵖ-intro₂ : {p q : Prop} → q → p ∨ᵖ q
 
+∧ᵖ-elim₁ : {p q : Prop} → p ∧ᵖ q → p
+∧ᵖ-elim₁ (∧ᵖ-intro a b) = a
+
+∧ᵖ-elim₂ : {p q : Prop} → p ∧ᵖ q → q
+∧ᵖ-elim₂ (∧ᵖ-intro a b) = b
+
+-- ∨ᵖ-elim : {p q : Prop} →  p ∨ᵖ q → ?
+    
 -- Universal quantifier
 ∀ᵖ : {ℓ : Level} {A : Set ℓ} → (A → Prop) → Prop
 ∀ᵖ p = ⟪ (∀ x → p x) ⟫

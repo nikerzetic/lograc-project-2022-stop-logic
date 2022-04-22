@@ -84,9 +84,12 @@ baseGeneratedTopology {X = X} {I = I} {J = J} B cov inter =
                 {!   !})
         ; ∩-open = λ U V U-open V-open → 
             ∃ᵖ-intro (
-               ∧ᵖ-intro 
-               (∀ᵖ-intro λ x p → {!   !})
-               (∀ᵖ-intro λ x p → {!   !})
+                ∧ᵖ-intro 
+                (∀ᵖ-intro λ x p → {!   !}
+                -- (? ∈ ?) 
+                -- ∧ᵖ-elim₁ {!   !}
+                )
+                (∀ᵖ-intro λ x p → {!   !})
             )
         -- U-open U V-open V
         ; union-open = {!   !}
