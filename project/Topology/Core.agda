@@ -66,31 +66,26 @@ baseForTopology {X = X} {I = I} {J = J} B T =
     ( ⟪ (∀ U → U ∈ (topology.τ T) → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B ∘ r))) ⟫ )
 
 
-baseGeneratedTopology : {ℓ : Level} {X : Set ℓ} {I J : Set} 
-    → (B : I → (ℙ X))
-    → ((x : X) → x ∈ union B)
-    → (∀ i j → ∃ᵖ (λ k → (B i ∩ B j) ≡ᵖ B k )) 
-    → topology X
-baseGeneratedTopology {X = X} {I = I} {J = J} B cov inter = 
-    record 
-        {
-        τ =  λ U → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B ∘ r)) 
-        ; ∅-open = {! λ U → ∀ r → (r : J → empty J → I) → empty U ≡ᵖ union (B ∘ r)!}
-        ; full-open = 
-            ∃ᵖ-intro (
-                ∧ᵖ-intro 
-                {! λ x → x ∈ (full X) →  !}
-                --  ⟪ (λ x → x ∈ (full X) →  (cov x)) ⟫
-                {!   !})
-        ; ∩-open = λ U V U-open V-open → 
-            ∃ᵖ-intro (
-                ∧ᵖ-intro 
-                (∀ᵖ-intro λ x p → {!   !}
-                -- (? ∈ ?) 
-                -- ∧ᵖ-elim₁ {!   !}
-                )
-                (∀ᵖ-intro λ x p → {!   !})
-            )
-        -- U-open U V-open V
-        ; union-open = {!   !}
-        }  
+-- baseGeneratedTopology : {ℓ : Level} {X : Set ℓ} {I J : Set} 
+--     → (B : I → (ℙ X))
+--     → ((x : X) → x ∈ union B)
+--     → (∀ i j → ∃ᵖ (λ k → (B i ∩ B j) ≡ᵖ B k )) 
+--     → topology X
+-- baseGeneratedTopology {X = X} {I = I} {J = J} B cov inter = 
+--     record 
+--         {
+--         τ =  λ U → ∃ᵖ (λ (r : J → I) → U ≡ᵖ union (B ∘ r))
+--         ; ∅-open = {!   !}
+--         ; full-open = {!  !}
+--         ; ∩-open = {!   !}
+--             ∃ᵖ-intro (
+--                 ∧ᵖ-intro 
+--                 (∀ᵖ-intro λ x p → {!   !}
+--                 -- (? ∈ ?) 
+--                 -- ∧ᵖ-elim₁ {!   !}
+--                 )
+--                 (∀ᵖ-intro λ x p → {!   !})
+--             )
+--         -- U-open U V-open V
+--         ; union-open = {!   !}
+--         }    

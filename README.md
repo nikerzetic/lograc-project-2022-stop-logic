@@ -33,7 +33,7 @@ You may not need all of these, but be ready to formalize them as needed:
 ### Continuous maps - G
 
 - [ ] definition of a continuous map (inverse image preserves opens)
-- [ ] identity and constant maps are continuous
+- [ ] constant map is continuous
 - [ ] composition of continuous maps is continuous
 - [ ] definition of a homeomorphism
 
