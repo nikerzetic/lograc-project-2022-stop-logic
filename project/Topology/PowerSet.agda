@@ -62,16 +62,6 @@ union S x = ∃ᵖ (λ i → x ∈ S i)
 _∩_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → ℙ A
 U ∩ V = λ x → U x ∧ᵖ V x
 
--- ∈-∩-∈ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → P A → Prop
--- ∈-∩-∈ (x ∈ (A ∩ B)) = x ∈ A
-
--- -- Subfamily 
--- subfamily : {ℓ k : Level} {U : Set ℓ } {J I : ℙ U} {A : Set k} 
---     → (I → ℙ A) 
---     → ( {! full J  !} ⊆ full I) 
---     → (J → ℙ A) 
--- subfamily = {!   !}
-
 -- Countable set
 -- record countable₁ {ℓ} (A : Set ℓ) = Set where 
 -- -- ??? Setω₁ 
