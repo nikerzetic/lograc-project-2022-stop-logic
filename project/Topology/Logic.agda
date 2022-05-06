@@ -12,7 +12,14 @@ open import Agda.Primitive
 open import Relation.Binary.PropositionalEquality
 open import Data.Bool
 
+------------------------------------------------------------------------
+
+infix 1 ∃ᵖ
+infixl 5 _∧ᵖ_ 
+infixl 4 _∨ᵖ_
 infix 0 ⟪_⟫
+
+------------------------------------------------------------------------
 
 -- The collapsing function (also known as "resizing")
 postulate ⟪_⟫ : {ℓ : Level} (p : Prop ℓ) → Prop
@@ -38,6 +45,8 @@ record ⊤ᵖ : Prop where
     constructor ⊤ᵖ-intro
 
 -- Conjunction
+
+
 data _∧ᵖ_ : Prop → Prop → Prop where
     ∧ᵖ-intro : {p q : Prop} → p → q → p ∧ᵖ q
 

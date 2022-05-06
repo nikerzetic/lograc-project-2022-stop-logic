@@ -15,9 +15,10 @@ open import Topology.Logic
 
 ------------------------------------------------------------------------
 
-infix 4 _∩_
-infix 3 _∈_
-infix 3 _⊆_ 
+infix 10 _∩_
+infix 9 _∈_
+infix 8 _⊆_ 
+infix 8 _⊆ᵖ_ 
 
 ------------------------------------------------------------------------
 
@@ -40,9 +41,12 @@ full A = λ x → ⊤ᵖ
 _⊆_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop ℓ
 S ⊆ T = ∀ x → x ∈ S → x ∈ T
 
+_⊆ᵖ_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop
+S ⊆ᵖ T = ⟪ S ⊆ T ⟫
+
 -- Equality relation that returns Prop
 _≡ᵖ_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop
-S ≡ᵖ T = ⟪ S ⊆ T ⟫ ∧ᵖ ⟪ T ⊆ S ⟫
+S ≡ᵖ T =  S ⊆ᵖ T ∧ᵖ T ⊆ᵖ S 
 
 -- Subset extensionality
 postulate subset-ext : {ℓ : Level} {A : Set ℓ} {S T : ℙ A} → (∀ x → S x ≡ T x) → S ≡ T
