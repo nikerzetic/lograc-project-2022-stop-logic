@@ -82,8 +82,12 @@ baseGeneratedTopology {X = X} {I = I} B ib =
         τ =  λ (U : ℙ X) → U ≡ᵖ (λ (x : X) → ∃ᵖ (λ (i : I) → x ∈ B i ∧ᵖ B i ⊆ᵖ U))
             -- → ∀ᵖ (λ x → x ∈ U 
             --     → ∃ᵖ (λ (i : I) → x ∈ B i ∧ᵖ B i ⊆ᵖ U))
-        ; ∅-open = {!  ∃ᵖ-intro  !}
-        ; full-open = {!  !}
+        ; ∅-open = ∧ᵖ-intro 
+            (∀ᵖ-intro (λ x xin0 → ⊥ᵖ-elim xin0)) 
+            (∀ᵖ-intro (λ x xinB → {! ∧ᵖ-elim₂ (∃ᵖ-elim xinB)  !}))
+        ; full-open = ∧ᵖ-intro 
+            (∀ᵖ-intro (λ x xiX → {!  λ ∧ᵖ-elim₁ (isBase B) !}))
+            {!   !}
         ; ∩-open = {!   !}
         ; union-open = {!   !}
         }
