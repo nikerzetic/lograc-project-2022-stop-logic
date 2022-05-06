@@ -15,29 +15,24 @@ open import Topology.Core
 
 
 ------------------------------------------------------------------------
-
--- -- Function image and preimage
--- _ₓ_ : {!  {ℓ : Level} {X Y : Set ℓ} → (f : X → Y) → ℙ X !}
--- f ₓ U = {!   !}
-
--- _ˣ_ : {!   !}
--- f ˣ V = {!   !} 
-
-preimage : {ℓ : Level} {X Y : Set ℓ} 
-   → (f : (ℙ X) → (ℙ Y))
-   → {f^-1 : (ℙ Y) → (ℙ X)}
-   → {∀ (U : ℙ Y) → ((f (f^-1 U)) ≡ᵖ U)}
-   → ℙ Y 
-   → ℙ X
-preimage f {f-1} Y = f-1 Y
-
-image : {ℓ : Level} → {X Y : Set ℓ} → (f : (ℙ X) → (ℙ Y)) → ℙ X → ℙ Y
-image f X = f X
-
-_∘_ : {ℓ : Level} {X Y Z : Set ℓ} → (g : ℙ Y → ℙ Z) → (f : ℙ X → ℙ Y) → (ℙ X → ℙ Z)
+ 
+_∘_ : {ℓ : Level} {X Y Z : Set ℓ} → (g : Y → Z) → (f : X → Y) → (X → Z)
 g ∘ f = λ U → g (f U)
 
-record continuous-map {ℓ} (X Y : Set ℓ) (f : (ℙ X) → (ℙ Y)) : Setω₁ where
+preimage : {ℓ : Level} {X Y : Set ℓ} 
+   → (f : X → Y)
+   → (S : ℙ Y) 
+   → ℙ X
+preimage f S = λ U → S (f U) 
+
+-- image : {ℓ : Level} {X Y : Set ℓ} 
+--     → (f : X → Y) 
+--     → ℙ X 
+--     → ℙ Y
+-- image f X = f X
+
+
+record continuousMap {ℓ} (X Y : Set ℓ) (f : X → Y) : Setω₁ where
      field
         τ-domain : topology X
         τ-codomain : topology Y
@@ -45,14 +40,40 @@ record continuous-map {ℓ} (X Y : Set ℓ) (f : (ℙ X) → (ℙ Y)) : Setω₁
 
 
 compositionOfCountinuousIsContinuous : {ℓ : Level} {X Y Z : Set ℓ} 
-  → (f : ℙ X → ℙ Y) 
-  → (continuous-map X Y f)
-  → (g : ℙ Y → ℙ Z) 
-  → (continuous-map Y Z g)
-  → (continuous-map X Z (g ∘ f)) 
+  → (f : X → Y) 
+  → (continuousMap X Y f)
+  → (g : Y → Z) 
+  → (continuousMap Y Z g)
+  → (continuousMap X Z (g ∘ f)) 
 compositionOfCountinuousIsContinuous f fCont g gCont = record
     {
-      τ-domain = continuous-map.τ-domain fCont 
-    ; τ-codomain = continuous-map.τ-codomain gCont
-    ; preimagePreservesOpens = {!   !}
+      τ-domain = continuousMap.τ-domain fCont 
+    ; τ-codomain = continuousMap.τ-codomain gCont
+    ; preimagePreservesOpens = λ U U⊆ᵒZ → 
+        ∃ᵖ-elim 
+        {!   !} 
+        {!   !}
     }
+
+id_ : {ℓ : Level} 
+    → (X : Set ℓ)
+    → (X → X)
+id X = λ (x : X) → x
+
+idIsContinuous : {ℓ : Level} {X : Set ℓ}
+    → (T : topology X)
+    → (continuousMap X X (id X))
+idIsContinuous T = 
+    record {
+        τ-domain = T
+      ; τ-codomain = T
+      ; preimagePreservesOpens = {!   !}
+    }
+
+record homeomorphism {ℓ} (X Y : Set ℓ) (f : X → Y) (f-1 : Y → X)  : Setω₁ where
+    field
+      τ-domain : topology X
+      τ-codomain : topology Y
+      mapsTo : continuousMap X Y f
+      mapsFrom : continuousMap Y X f-1
+
