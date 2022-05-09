@@ -32,10 +32,11 @@ You may not need all of these, but be ready to formalize them as needed:
 
 ### Continuous maps - G
 
-- [ ] definition of a continuous map (inverse image preserves opens)
+- [X] definition of a continuous map (inverse image preserves opens)
+- [X] continuous map is continuous
 - [ ] constant map is continuous
 - [ ] composition of continuous maps is continuous
-- [ ] definition of a homeomorphism
+- [X] definition of a homeomorphism
 
 ### Constructions - N*
 
@@ -76,7 +77,7 @@ You may not need all of these, but be ready to formalize them as needed:
 - [ ] 𝕂 is compact
 - [ ] 𝕂 is 2-countable
 - [ ] 𝕂 is 0-dimensional
-- [ ] 𝕂 × K is homeomorphic to 𝕂
+- [ ] 𝕂 × 𝕂 is homeomorphic to 𝕂
 - [ ] 𝕂 is homogeneous (for any `α, β ∈ 𝕂` there is a homeomorphism `h : 𝕂 → 𝕂` such that `h α = β`
 
 ### Sierpinski space 𝕊

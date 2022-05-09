@@ -28,6 +28,9 @@ infix 3 _⊆_
 _∈_ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → Prop
 x ∈ S = S x
 
+_∉_ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → Prop 
+x ∉ S = ¬ᵖ (x ∈ S)
+
 -- The empty subset
 empty : {ℓ : Level} (A : Set ℓ) → ℙ A
 empty A  = λ x → ⊥ᵖ
@@ -40,9 +43,17 @@ full A = λ x → ⊤ᵖ
 _⊆_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop ℓ
 S ⊆ T = ∀ x → x ∈ S → x ∈ T
 
--- Equality relation that returns Prop
+-- Complement
+_ᶜ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A
+_ᶜ S = λ x → x ∉ S
+
+-- Equality relation for power set that returns Prop
 _≡ᵖ_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop
 S ≡ᵖ T = ⟪ S ⊆ T ⟫ ∧ᵖ ⟪ T ⊆ S ⟫
+
+-- Equality of elements
+data _≡ᵉ_ {a : Level} {A : Set a} (x : A) : A → Prop where
+  instance reflᵉ : x ≡ᵉ x
 
 -- Subset extensionality
 postulate subset-ext : {ℓ : Level} {A : Set ℓ} {S T : ℙ A} → (∀ x → S x ≡ T x) → S ≡ T
