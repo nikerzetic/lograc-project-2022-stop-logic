@@ -35,7 +35,7 @@ You may not need all of these, but be ready to formalize them as needed:
 - [X] definition of a continuous map (inverse image preserves opens)
 - [X] continuous map is continuous
 - [ ] constant map is continuous
-- [ ] composition of continuous maps is continuous
+- [X] composition of continuous maps is continuous
 - [X] definition of a homeomorphism
 
 ### Constructions - N*

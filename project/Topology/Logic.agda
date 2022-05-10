@@ -73,11 +73,12 @@ data _∧ᵖ_ : Prop → Prop → Prop where
 ∧ᵖ-elim₂ (∧ᵖ-intro a b) = b
 
 -- Negation 
-data ¬ᵖ_ : Prop → Prop where
-    ¬ᵖ-intro : {p : Prop} → p → ¬ᵖ p
+¬ᵖ_ : {ℓ : Level} → Prop ℓ → Prop ℓ
+¬ᵖ p = p → ⊥ᵖ
 
-¬ᵖ-elim : {p : Prop} → ¬ᵖ p → p
-¬ᵖ-elim (¬ᵖ-intro p) = p
+¬ᵖ¬ᵖ-elim : (ℓ : Level) → Prop (suc ℓ)
+¬ᵖ¬ᵖ-elim ℓ = {p : Prop ℓ} → ¬ᵖ ¬ᵖ p → p
+
 
 -- Disjunction
 data _∨ᵖ_ : Prop → Prop → Prop where

@@ -34,6 +34,7 @@ discrete-topology X =
         ; union-open = λ _ _ → ⊤ᵖ-intro
         }
 
+-- trivial topology
 indiscrete-topology : {ℓ : Level} (X : Set ℓ) → topology X
 indiscrete-topology X =
     record

@@ -39,6 +39,16 @@ empty A  = λ x → ⊥ᵖ
 full : {ℓ : Level} (A : Set ℓ) → ℙ A
 full A = λ x → ⊤ᵖ
 
+postulate ∉∈Set : {ℓ : Level} {A : Set ℓ} (S : ℙ A) (* : A) → (* ∈ S) ∨ᵖ (* ∉ S)
+
+-- Equality of elements
+data _≡ᵉ_ {a : Level} {A : Set a} (x : A) : A → Prop where
+  instance reflᵉ : x ≡ᵉ x
+
+-- The singelton 
+singelton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ A
+singelton * = λ x → x ≡ᵉ *
+
 -- Subset relation
 _⊆_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop ℓ
 S ⊆ T = ∀ x → x ∈ S → x ∈ T
@@ -50,10 +60,6 @@ _ᶜ S = λ x → x ∉ S
 -- Equality relation for power set that returns Prop
 _≡ᵖ_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop
 S ≡ᵖ T = ⟪ S ⊆ T ⟫ ∧ᵖ ⟪ T ⊆ S ⟫
-
--- Equality of elements
-data _≡ᵉ_ {a : Level} {A : Set a} (x : A) : A → Prop where
-  instance reflᵉ : x ≡ᵉ x
 
 -- Subset extensionality
 postulate subset-ext : {ℓ : Level} {A : Set ℓ} {S T : ℙ A} → (∀ x → S x ≡ T x) → S ≡ T
