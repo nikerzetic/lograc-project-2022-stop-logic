@@ -96,8 +96,20 @@ constIsContinuous {X = X} {T₁ = T₁} * = λ U U⊆ᵒY →
         -- (λ *∈U → {! full X ∈ topology.τ T₁  !}) 
         -- (λ *∉U → {! empty X ∈ topology.τ T₁  !})
 
--- vsaka preslikava iz prostora z diskretno topologijo je zvezna TODO
+-- vsaka preslikava iz prostora z diskretno topologijo je zvezna
+fromDiscreteContinuous : {ℓ k : Level} {X : Set ℓ} {Y : Set k} 
+    → {T : topology Y}
+    → (f : X → Y)
+    → isContinuous (discrete-topology X) T f
+fromDiscreteContinuous f = λ U U⊆ᵒY → ⊤ᵖ-intro
+
 -- vsaka preslikava v prostor s trivialno topologijo je zvezna TODO
+toIndiscreteContinuous : {ℓ k : Level} {X : Set ℓ} {Y : Set k} 
+    → {T : topology X}
+    → (f : X → Y)
+    → isContinuous T (indiscrete-topology Y) f
+toIndiscreteContinuous {T = T} f = λ U U⊆ᵒY → 
+    {!  !}
 
 -- Surjectivity, Injectivity and Bijectivity
 isSurjective : {ℓ k : Level} {X : Set ℓ} {Y : Set k}

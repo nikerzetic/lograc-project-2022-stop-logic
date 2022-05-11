@@ -36,6 +36,8 @@ You may not need all of these, but be ready to formalize them as needed:
 - [X] continuous map is continuous
 - [ ] constant map is continuous
 - [X] composition of continuous maps is continuous
+- [X] every map from space with discrete topology is continuous
+- [ ] every map to space with indiscrete topology is continuous
 - [X] definition of a homeomorphism
 
 ### Constructions - N*
