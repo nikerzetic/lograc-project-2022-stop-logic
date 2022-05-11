@@ -29,6 +29,9 @@ infix 8 _⊆ᵖ_
 _∈_ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → Prop
 x ∈ S = S x
 
+_∉_ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → Prop 
+x ∉ S = ¬ᵖ (x ∈ S)
+
 -- The empty subset
 empty : {ℓ : Level} (A : Set ℓ) → ℙ A
 empty A  = λ x → ⊥ᵖ
@@ -37,14 +40,29 @@ empty A  = λ x → ⊥ᵖ
 full : {ℓ : Level} (A : Set ℓ) → ℙ A
 full A = λ x → ⊤ᵖ
 
+postulate ∉∈Set : {ℓ : Level} {A : Set ℓ} (S : ℙ A) (* : A) → (* ∈ S) ∨ᵖ (* ∉ S)
+
+-- Equality of elements
+data _≡ᵉ_ {a : Level} {A : Set a} (x : A) : A → Prop where
+  instance reflᵉ : x ≡ᵉ x
+
+-- The singelton 
+singelton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ A
+singelton * = λ x → x ≡ᵉ *
+
 -- Subset relation
 _⊆_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop ℓ
 S ⊆ T = ∀ x → x ∈ S → x ∈ T
 
+-- Subset relation returns Prop
 _⊆ᵖ_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop
 S ⊆ᵖ T = ⟪ S ⊆ T ⟫
 
--- Equality relation that returns Prop
+-- Complement
+_ᶜ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A
+_ᶜ S = λ x → x ∉ S
+
+-- Equality relation for power set that returns Prop
 _≡ᵖ_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop
 S ≡ᵖ T =  S ⊆ᵖ T ∧ᵖ T ⊆ᵖ S 
 
