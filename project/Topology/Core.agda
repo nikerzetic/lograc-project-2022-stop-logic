@@ -58,7 +58,7 @@ indiscrete-topology X =
 -- Proof that B is a base
 isBase : {ℓ k : Level} {X : Set ℓ} {I : Set k}
     → (I → ℙ X)
-    → Prop
+    → Set
 isBase {X = X} {I = I} B = 
     (∀ᵖ λ (x : X) → (∃ᵖ (λ (i : I) → x ∈ B i)))
     ∧ᵖ
@@ -68,7 +68,7 @@ isBase {X = X} {I = I} B =
 isBaseOfTopology : {ℓ k : Level} {X : Set ℓ} {I : Set k}
     → (I → ℙ X)
     → topology X 
-    → Prop
+    → Set
 isBaseOfTopology {X = X} {I = I} B T = 
     ∀ᵖ λ (U : ℙ X) → U ∈ topology.τ T 
         → ∃ᵖ (λ (J : ℙ I) → U ≡ᵖ unionᵇ B J) -- Mogoče je dovolj sam v eno smer enakost?

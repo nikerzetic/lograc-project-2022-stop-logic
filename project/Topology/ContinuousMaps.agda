@@ -48,7 +48,7 @@ isContinuous : {ℓ k : Level}
     {X : Set ℓ} {Y : Set k} 
     (T₁ : topology X) (T₂ : topology Y) 
     (f : X → Y) 
-    → Prop (lsuc lzero ⊔ k)
+    → Set (lsuc lzero ⊔ k)
 isContinuous T₁ T₂ f = ∀ U → U ∈ (topology.τ T₂) → (preimage f U) ∈ (topology.τ T₁)
 
 -- Proof that composition of continuous maps is continuous map
@@ -119,13 +119,13 @@ toIndiscreteContinuous {T = T} f = λ U U⊆ᵒY →
 -- Surjectivity, Injectivity and Bijectivity
 isSurjective : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
     → (f : X → Y)
-    → Prop k
+    → Set k
 isSurjective {X = X} {Y = Y} f = ∀ y → y ∈ full Y → ∃ᵖ (λ (x : X) → (f x) ≡ᵉ y)
 
 
 isInjective : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
     → (f : X → Y)
-    → Prop ℓ
+    → Set ℓ
 isInjective {X = X} {Y = Y} f = 
     ∀ x₁ → x₁ ∈ full X → 
         ∀ x₂ → x₂ ∈ full X → (f x₁) ≡ᵉ (f x₂) → x₁ ≡ᵉ x₂
@@ -133,14 +133,14 @@ isInjective {X = X} {Y = Y} f =
 
 isBijective : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
     → (f : X → Y)
-    → Prop 
+    → Set 
 isBijective f = ⟪ isInjective f ⟫ ∧ᵖ ⟪ isSurjective f ⟫
 
 -- Definition of a homeomorphism
 isHomeomorphism : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
     (T₁ : topology X) (T₂ : topology Y)
     → (f : X → Y)
-    → Prop 
+    → Set 
 isHomeomorphism T₁ T₂ f = 
     (⟪ isContinuous T₁ T₂ f ⟫
     ∧ᵖ 
