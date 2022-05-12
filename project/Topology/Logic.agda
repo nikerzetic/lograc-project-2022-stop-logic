@@ -88,9 +88,11 @@ data _∧ᵖ_ : Prop → Prop → Prop where
 ¬ᵖ¬ᵖ-elim : (ℓ : Level) → Prop (suc ℓ)
 ¬ᵖ¬ᵖ-elim ℓ = {p : Prop ℓ} → ¬ᵖ ¬ᵖ p → p
 
+¬ᵖ-intro : {ℓ : Level} {p q : Prop ℓ}→ (p → q) → (p → ¬ᵖ q) → ¬ᵖ p
+¬ᵖ-intro f g x = g x (f x)
 
 -- Disjunction
-data _∨ᵖ_ : Prop → Prop → Prop where
+data _∨ᵖ_ : Prop → Prop  → Prop where
     ∨ᵖ-intro₁ : {p q : Prop} → p → p ∨ᵖ q
     ∨ᵖ-intro₂ : {p q : Prop} → q → p ∨ᵖ q
 
@@ -125,3 +127,4 @@ data ∃ {ℓ : Level} {A : Set ℓ} : (A → Prop) → Prop ℓ where
 
 ∃ᵖ-intro : {ℓ : Level} {A : Set ℓ} {u : A → Prop} {a : A} → u a → ∃ᵖ u
 ∃ᵖ-intro p = ↓ (∃-intro p)
+ 

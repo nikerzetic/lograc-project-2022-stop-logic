@@ -31,8 +31,8 @@ preimageCompose : {ℓ k m : Level}
     {X : Set ℓ} {Y : Set k} {Z : Set m}
     (f : X → Y) (g : Y → Z)
     (U : ℙ Z)
-    → preimage (g ∘ f) U ≡ₛₚ preimage f (preimage g U) 
-preimageCompose f g U = reflₛₚ
+    → preimage (g ∘ f) U ≡ preimage f (preimage g U) 
+preimageCompose f g U = refl
 -- subset-ext (λ x → refl)
 
 -- Image of a map
@@ -41,7 +41,7 @@ image : {ℓ k : Level}
     → (f : X → Y)
     → ℙ X
     → ℙ Y
-image {X = X} f A = λ y → (∃ᵖ (λ (x : X) → (x ∈ A) ∧ᵖ ((f x) ≡ᵉ y)))
+image {X = X} f A = λ y → (∃ᵖ (λ (x : X) → (x ∈ A) ∧ᵖ (singelton (f x) ≡ᵖ singelton y)))
 
 -- Definition for continuous map
 isContinuous : {ℓ k : Level} 
@@ -73,7 +73,7 @@ id X = λ (x : X) → x
 idIsContinuous : {ℓ : Level} {X : Set ℓ} 
     {T : topology X} 
     → isContinuous T T (id X)
-idIsContinuous = λ _ U⊆ᵒX → U⊆ᵒX
+idIsContinuous = λ _ U⊆ᵒX → U⊆ᵒX 
 
 -- Constant map from a set X to * ∈ Y
 constF : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
@@ -85,16 +85,21 @@ constF * = λ x → *
 emptyPreimage : {ℓ k : Level} {X : Set ℓ} {Y : Set k} (U : ℙ Y) (* : Y) → ℙ X
 emptyPreimage U * = preimage (constF *) (U ∩ singelton *)
 
+-- Druzina indeksirana z dokazi p-ja 
+cow : {ℓ : Level} {X : Set ℓ} → (p : Prop) → p → ℙ X 
+cow {X = X} p _ = full X
+
+
 constIsContinuous : {ℓ k : Level} {X : Set ℓ} {Y : Set k} 
     {T₁ : topology X} {T₂ : topology Y}
     → (* : Y) 
     → isContinuous T₁ T₂ (constF *)
-constIsContinuous {X = X} {T₁ = T₁} * = λ U U⊆ᵒY →
-    ∨ᵖ-elim (∉∈Set U *) 
-        (λ *∈U → {!   !}) 
-        (λ *∉U → {!   !})
-        -- (λ *∈U → {! full X ∈ topology.τ T₁  !}) 
-        -- (λ *∉U → {! empty X ∈ topology.τ T₁  !})
+constIsContinuous {X = X} {T₁ = T₁} {T₂ = T₂} * = λ U U⊆ᵒY → {!   !}
+    -- ∨ᵖ-elim (∉∈Set U *) 
+    --     (λ *∈U →  {!   !}) 
+    --     (λ *∉U →  {!   !}) -- (substᵖ (topology.τ T₁) (subset-extₛₚ (λ x → reflₛₚ)) (⊥ᵖ-elim (*∉U {!  !})) )
+    --     -- (λ *∈U → {! full X ∈ topology.τ T₁  !}) 
+    --     -- (λ *∉U → {! empty X ∈ topology.τ T₁  !})
 
 -- vsaka preslikava iz prostora z diskretno topologijo je zvezna
 fromDiscreteContinuous : {ℓ k : Level} {X : Set ℓ} {Y : Set k} 
@@ -123,7 +128,7 @@ isInjective : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
     → Prop ℓ
 isInjective {X = X} {Y = Y} f = 
     ∀ x₁ → x₁ ∈ full X → 
-        ∀ x₂ → x₂ ∈ full X → (¬ᵖ (x₁ ≡ᵉ x₂)) ⇒ᵖ (¬ᵖ ((f x₁) ≡ᵉ (f x₂)))
+        ∀ x₂ → x₂ ∈ full X → (f x₁) ≡ᵉ (f x₂) → x₁ ≡ᵉ x₂
 
 
 isBijective : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
@@ -135,10 +140,21 @@ isBijective f = ⟪ isInjective f ⟫ ∧ᵖ ⟪ isSurjective f ⟫
 isHomeomorphism : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
     (T₁ : topology X) (T₂ : topology Y)
     → (f : X → Y)
-    → Prop
+    → Prop 
 isHomeomorphism T₁ T₂ f = 
-    (⟪ isContinuous T₁ T₂ f ⟫ 
+    (⟪ isContinuous T₁ T₂ f ⟫
     ∧ᵖ 
     ⟪ (∀ U → U ∈ (topology.τ T₁) → (image f U ∈ (topology.τ T₂))) ⟫) -- open map
     ∧ᵖ
     isBijective f
+
+idIsHomeomorphism : {ℓ : Level} {X : Set ℓ} {T : topology X} → isHomeomorphism T T (id X)
+idIsHomeomorphism {X = X} = 
+    ∧ᵖ-intro 
+      (∧ᵖ-intro 
+        (∀ᵖ-intro idIsContinuous) 
+        (∀ᵖ-intro λ U Uopen → {!  !}) ) 
+      (∧ᵖ-intro 
+        (↓ λ _ _ _ _ x₁≡x₂ → x₁≡x₂) 
+        (∀ᵖ-intro (λ x x∈X → ↓ (∃-intro reflᵉ)))) 
+

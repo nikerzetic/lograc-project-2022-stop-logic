@@ -69,12 +69,23 @@ S ≡ᵖ T =  S ⊆ᵖ T ∧ᵖ T ⊆ᵖ S
 -- Subset extensionality
 postulate subset-ext : {ℓ : Level} {A : Set ℓ} {S T : ℙ A} → (∀ x → S x ≡ T x) → S ≡ T
 
+-- Subset extensionality
+postulate subset-extₛₚ : {ℓ : Level} {A : Set ℓ} {S T : ℙ A} → (∀ x → S x ≡ₛₚ T x) → S ≡ₛₚ T
+
+
 ⊆-⊇-≡ : {ℓ : Level} {A : Set ℓ} (S T : ℙ A) → S ⊆ T → T ⊆ S → S ≡ T
 ⊆-⊇-≡ S T S⊆T T⊆S = subset-ext λ x → prop-ext (S⊆T x) (T⊆S x)
 
 -- Union of a family
 union : {ℓ k : Level} {I : Set ℓ} {A : Set k} → (I → ℙ A) → ℙ A
 union S x = ∃ᵖ (λ i → x ∈ S i)
+
+-- union of subfamily of B 
+unionᵇ : {ℓ k : Level} {X : Set ℓ} {I : Set k}
+    → (B : I → ℙ X) 
+    → (J : ℙ I)
+    → ℙ X
+unionᵇ {I = I} B J = λ x → ∃ᵖ (λ (i : I) → i ∈ J ∧ᵖ x ∈ B i ) 
 
 -- Binary intersection
 _∩_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → ℙ A
