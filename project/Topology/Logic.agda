@@ -4,6 +4,8 @@
 -- Logic, subsets and power sets
 ------------------------------------------------------------------------
 
+-- THIS FILE IS OBSOLETE AS WE USE Set ALL THE WAY
+
 {-# OPTIONS --prop #-}
 
 module Topology.Logic where

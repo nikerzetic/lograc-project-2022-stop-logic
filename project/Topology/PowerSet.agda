@@ -4,14 +4,14 @@
 -- Subsets and power sets
 ------------------------------------------------------------------------
 
-{-# OPTIONS --prop #-}
-
 module Topology.PowerSet where
 
 open import Agda.Primitive
 open import Relation.Binary.PropositionalEquality
 open import Data.Bool
-open import Topology.Logic
+open import Data.Empty
+open import Data.Unit
+open import Data.Product
 
 ------------------------------------------------------------------------
 
@@ -19,74 +19,49 @@ infix 10 _∩_
 infix 9 _∈_
 infix 8 _⊆_ 
 infix 8 _⊆ᵖ_ 
+infix 4 _∩_
+infix 3 _∈_
+infix 3 _⊆_
 
 ------------------------------------------------------------------------
 
--- Powerset
-ℙ : {ℓ : Level} → Set ℓ → Set (lsuc lzero ⊔ ℓ)
-ℙ A = A → Prop
+-- Predicative “powerset”
+ℙ : {ℓ : Level} (k : Level) → Set ℓ → Set (ℓ ⊔ lsuc k)
+ℙ k A = A → Set k
 
-_∈_ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → Prop
+_∈_ : {k ℓ : Level} {A : Set ℓ} → A → ℙ k A → Set k
 x ∈ S = S x
 
-_∉_ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → Prop 
-x ∉ S = ¬ᵖ (x ∈ S)
+data 𝟘 {ℓ : Level} : Set ℓ where
 
 -- The empty subset
-empty : {ℓ : Level} (A : Set ℓ) → ℙ A
-empty A  = λ x → ⊥ᵖ
+empty : {ℓ k : Level} (A : Set ℓ) → ℙ k A
+empty _ _ = 𝟘
+
+data 𝟙 {ℓ : Level} : Set ℓ where
+  𝟙-intro : 𝟙
 
 -- The full subset
-full : {ℓ : Level} (A : Set ℓ) → ℙ A
-full A = λ x → ⊤ᵖ
-
-postulate ∉∈Set : {ℓ : Level} {A : Set ℓ} (S : ℙ A) (* : A) → (* ∈ S) ∨ᵖ (* ∉ S)
-
--- Equality of elements
-data _≡ᵉ_ {a : Level} {A : Set a} (x : A) : A → Prop where
-  instance reflᵉ : x ≡ᵉ x
-
--- The singelton 
-singelton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ A
-singelton * = λ x → x ≡ᵉ *
+full : {ℓ k : Level} (A : Set ℓ) → ℙ k A
+full _ _ = 𝟙
 
 -- Subset relation
-_⊆_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop ℓ
-S ⊆ T = ∀ x → x ∈ S → x ∈ T
-
--- Subset relation returns Prop
-_⊆ᵖ_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop
-S ⊆ᵖ T = ⟪ S ⊆ T ⟫
-
--- Complement
-_ᶜ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A
-_ᶜ S = λ x → x ∉ S
-
--- Equality relation for power set that returns Prop
-_≡ᵖ_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop
-S ≡ᵖ T =  S ⊆ᵖ T ∧ᵖ T ⊆ᵖ S 
+_⊆_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → Set (ℓ ⊔ k ⊔ m)
+S ⊆ T = ∀ x → S x → T x
 
 -- Subset extensionality
-postulate subset-ext : {ℓ : Level} {A : Set ℓ} {S T : ℙ A} → (∀ x → S x ≡ T x) → S ≡ T
-
-⊆-⊇-≡ : {ℓ : Level} {A : Set ℓ} (S T : ℙ A) → S ⊆ T → T ⊆ S → S ≡ T
-⊆-⊇-≡ S T S⊆T T⊆S = subset-ext λ x → prop-ext (S⊆T x) (T⊆S x)
+postulate ⊆-⊇-≡ : {ℓ k : Level} {A : Set ℓ} (S T : ℙ k A) → S ⊆ T → T ⊆ S → S ≡ T
 
 -- Union of a family
-union : {ℓ k : Level} {I : Set ℓ} {A : Set k} → (I → ℙ A) → ℙ A
-union S x = ∃ᵖ (λ i → x ∈ S i)
+union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} → (I → ℙ j A) → ℙ (ℓ ⊔ j) A
+union {I = I} S x = Σ[ i ∈ I ] S i x
 
 -- Binary intersection
-_∩_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → ℙ A
-U ∩ V = λ x → U x ∧ᵖ V x
+_∩_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → ℙ (k ⊔ m) A
+U ∩ V = λ x → U x × V x
 
--- Countable set
--- record countable₁ {ℓ} (A : Set ℓ) = Set where 
--- -- ??? Setω₁ 
---     field 
---         ϕ = {!   !}
---         ϕ-injective = {!   !}
+∩-⊆-left : {ℓ k m : Level} {A : Set ℓ} (U : ℙ k A) (V : ℙ m A) → U ∩ V ⊆ U
+∩-⊆-left U V x (Ux , _) = Ux
 
--- countable₂ : ?
--- countable₂ A = empty A → ⊤ᵖ
--- countable₂ A = empty A → ⊤ᵖ
+∩-⊆-right : {ℓ k m : Level} {A : Set ℓ} (U : ℙ k A) (V : ℙ m A) → U ∩ V ⊆ V
+∩-⊆-right U V x (_ , Vx) = Vx
