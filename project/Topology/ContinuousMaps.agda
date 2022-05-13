@@ -11,9 +11,9 @@ open import Agda.Primitive
 open import Topology.PowerSet
 open import Data.Product
 open import Topology.Core
-open import Relation.Binary.PropositionalEquality
-open import Agda.Builtin.Unit
-
+open import Relation.Binary.PropositionalEquality as Eq
+open Eq using (_≡_; refl; sym; trans; cong; subst; resp)
+open Eq.≡-Reasoning using (begin_; _≡⟨⟩_; step-≡; step-≡˘; _∎)
 
 ------------------------------------------------------------------------
 
@@ -128,106 +128,68 @@ toIndiscreteContinuous {m} {X = X} {Y = Y} {T = T} f U U⊆ᵒY =
         (λ x x∈V → proj₁ x∈V (f x) full-intro) 
         (λ x p → (λ y _ → U⊆ᵒY (f x) p y) , full-intro)
 
+-- Definition of a homeomorphism
+isHomeomorphism : {ℓ k m n o : Level} {X : Set ℓ} {Y : Set k}
+    → (T₁ : topology m n X) (T₂ : topology m o Y) 
+    → (f : X → Y)
+    → (g : Y → X)
+    → Set (ℓ ⊔ k ⊔ lsuc m ⊔ n ⊔ o)
+isHomeomorphism {ℓ = ℓ} {k = k} {X = X} {Y = Y} T₁ T₂ f g = 
+    (isContinuous T₁ T₂ f) ×
+    (isContinuous T₂ T₁ g) ×
+    (∀ x → x ∈ full {k = ℓ} X → (g ∘ f) x ≡ x) × 
+    (∀ y → y ∈ full {k = k} Y → (f ∘ g) y ≡ y)
 
--- record _≃_ {ℓ m : Level} (A : Set ℓ) (B : Set m) : Set (ℓ ⊔ m) where
---   field
---     to      : A → B
---     from    : B → A
---     from∘to : (x : A) → from (to x) ≡ x
---     to∘from : (y : B) → to (from y) ≡ y
+inverseOfHomeoIsHomeo : {ℓ k m n o : Level} {X : Set ℓ} {Y : Set k}
+    → {T₁ : topology m n X} {T₂ : topology m o Y}
+    → (f : X → Y)
+    → (g : Y → X)
+    → isHomeomorphism T₁ T₂ f g
+    → isHomeomorphism T₂ T₁ g f
+inverseOfHomeoIsHomeo f g (fCont , gCont , gfx=x , fgx=x) = 
+      gCont 
+    , (fCont 
+    , ((λ x _ → fgx=x x full-intro) 
+    , (λ y _ → gfx=x y full-intro)))
 
---     toCont : {!  isContinuous  !}
---     fromCont : {!   !}
+idIsHomeo : {ℓ m n : Level} {X : Set ℓ}
+    → {T : topology m n X}
+    → isHomeomorphism T T (id X) (id X)
+idIsHomeo {X = X} {T = T} = 
+      idIsContinuous {X = X} {T = T} 
+    , (idIsContinuous {X = X} {T = T} 
+    , ((λ x _ → refl) 
+    , λ y _ → refl))
 
--- -- Definition of a homeomorphism
--- isHomeomorphism : {ℓ k m n₁ n₂ : Level} {X : Set ℓ} {Y : Set k}
---     (T₁ : topology m n₁ X) (T₂ : topology m n₂ Y)
---     → (f : X → Y)
---     → (g : Y → X)
---     → contf , contg , X
--- isHomeomorphism {X = X} {Y = Y} T₁ T₂ f g = (isContinuous T₁ T₂ f) × (isContinuous T₂ T₁ g) × X≃Y
---                             where
---                             X≃Y : X ≃ Y
---                             X≃Y = ?
+compositionOfHomeoIsHomeo : {a b c d e i j : Level}
+    → {X : Set a} {Y : Set b} {Z : Set c}
+    → {T₁ : topology d e X} {T₂ : topology d i Y} {T₃ : topology d j Z}
+    → (f : X → Y) (g : Y → Z)
+    → (f-1 : Y → X) (g-1 : Z → Y)
+    → isHomeomorphism T₁ T₂ f f-1
+    → isHomeomorphism T₂ T₃ g g-1
+    → isHomeomorphism T₁ T₃ (g ∘ f) (f-1 ∘ g-1)
+compositionOfHomeoIsHomeo 
+  {X = X} {Z = Z} f g f-1 g-1 (fCont , f-1Cont , f-1fx=x , ff-1x=x) (gCont , g-1Cont , g-1gx=x , gg-1x=x) = 
+      (λ U OpenU → fCont (preimage g U) (gCont U OpenU)) 
+    , ((λ U OpenU → g-1Cont (preimage f-1 U) (f-1Cont U OpenU))
+    , (compose-gf
+    , compose-f-1g-1))
+  where 
+  compose-gf : (x : X) → x ∈ full X → ((f-1 ∘ g-1) ∘ (g ∘ f)) x ≡ x
+  compose-gf = λ x _ → 
+    begin
+      ((f-1 ∘ g-1) ∘ (g ∘ f)) x ≡⟨ refl ⟩
+      f-1 ( g-1 (g ( f x))) ≡⟨ cong f-1 (g-1gx=x (f x) full-intro) ⟩
+      f-1 (f x) ≡⟨ f-1fx=x x full-intro ⟩  
+      x
+    ∎
 
-
--- -- Surjectivity, Injectivity and Bijectivity
--- isSurjective : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
---     → (f : X → Y)
---     → Set k
--- isSurjective {X = X} {Y = Y} f = ∀ y → y ∈ full Y → ∃ᵖ (λ (x : X) → (f x) ≡ᵉ y)
-
-
--- isInjective : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
---     → (f : X → Y)
---     → Set ℓ
--- isInjective {X = X} {Y = Y} f =
---     ∀ x₁ → x₁ ∈ full X →
---         ∀ x₂ → x₂ ∈ full X → (f x₁) ≡ᵉ (f x₂) → x₁ ≡ᵉ x₂
-
-
--- isBijective : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
---     → (f : X → Y)
---     → Set
--- isBijective f = ⟪ isInjective f ⟫ ∧ᵖ ⟪ isSurjective f ⟫
-
--- -- Definition of a homeomorphism
--- isHomeomorphism : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
---     (T₁ : topology X) (T₂ : topology Y)
---     → (f : X → Y)
---     → Set
--- isHomeomorphism T₁ T₂ f =
---     (⟪ isContinuous T₁ T₂ f ⟫
---     ∧ᵖ
---     ⟪ (∀ U → U ∈ (topology.τ T₁) → (image f U ∈ (topology.τ T₂))) ⟫) -- open map
---     ∧ᵖ
---     isBijective f
-
--- -- Lemma: Under identity map image is the same as original
--- idX=X : {ℓ : Level}
---     → {X : Set ℓ}
---     → {U : ℙ X}
---     → image (id X) U ≡ U
--- idX=X {U} = subset-ext λ x → prop-ext
---     -- (λ x∈image → ∃ᵖ-elim ∧ᵖ-elim₁ {!   !})
---     (λ xInImage → {!   !})
---     λ x∈U →
---       ↓ (∃-intro
---         (∧ᵖ-intro
---           x∈U
---           (∧ᵖ-intro
---             (∀ᵖ-intro (λ x₁ x₁∈sx → x₁∈sx))
---             (∀ᵖ-intro (λ x₁ x₁∈sx → x₁∈sx))
---           )
---         )
---         )
-
-
--- idIsHomeomorphism : {ℓ : Level} {X : Set ℓ} {T : topology X} → isHomeomorphism T T (id X)
--- idIsHomeomorphism {ℓ = ℓ} {X = X} {T = T} =
---     ∧ᵖ-intro
---       (∧ᵖ-intro
---         (∀ᵖ-intro (idIsContinuous {ℓ} {X} {T})) -- continuous
---         (∀ᵖ-intro (λ U Uopen → {!   !}
---           ))
--- --         (∀ᵖ-intro λ U Uopen →
--- --           topology.union-open
--- --           T
--- --           (λ z z₁ →
--- --             z ∈ U
--- --             ∧ᵖ
--- --             (
--- --               ⟪ ((x : X) (x₁ : x ≡ᵉ z) → x ≡ᵉ z₁) ⟫
--- --               ∧ᵖ
--- --               ⟪ ((x : X) (x₁ : x ≡ᵉ z₁) → x ≡ᵉ z) ⟫
--- --             )
--- --           )
--- --           (λ x → {!   !} )
--- -- --            ∃ᵖ-elim (λ i i∈I → {!   !}) {!   !}
--- --           )
---       )
---       (∧ᵖ-intro
---         (↓ λ _ _ _ _ x₁≡x₂ → x₁≡x₂) -- injective
---         (∀ᵖ-intro (λ x x∈X → ∃ᵖ-intro reflᵉ))) -- surjective
-
--- -- U x != x ∈ U ∧ᵖ (singelton ((id X) x) ≡ᵖ singelton y) of type Set
+  compose-f-1g-1 : (y : Z) → y ∈ full Z → ((g ∘ f) ∘ (f-1 ∘ g-1)) y ≡ y
+  compose-f-1g-1 = λ y _ → 
+    begin
+      ((g ∘ f) ∘ (f-1 ∘ g-1)) y ≡⟨ refl ⟩
+      g ( f (f-1 ( g-1 y))) ≡⟨ cong g (ff-1x=x (g-1 y) full-intro) ⟩
+      g (g-1 y) ≡⟨ gg-1x=x y full-intro ⟩  
+      y
+    ∎
