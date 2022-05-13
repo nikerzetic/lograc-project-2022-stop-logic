@@ -39,6 +39,7 @@ You may not need all of these, but be ready to formalize them as needed:
 - [X] every map from space with discrete topology is continuous
 - [ ] every map to space with indiscrete topology is continuous
 - [X] definition of a homeomorphism
+- [ ] identity map is a homeomorphism
 
 ### Constructions - N*
 

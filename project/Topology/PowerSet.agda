@@ -4,94 +4,87 @@
 -- Subsets and power sets
 ------------------------------------------------------------------------
 
-{-# OPTIONS --prop #-}
-
 module Topology.PowerSet where
 
 open import Agda.Primitive
 open import Relation.Binary.PropositionalEquality
 open import Data.Bool
-open import Topology.Logic
-
+open import Data.Empty
+open import Data.Unit
+open import Data.Product
+open import Relation.Nullary
 ------------------------------------------------------------------------
 
-infix 10 _∩_
-infix 9 _∈_
-infix 8 _⊆_ 
-infix 8 _⊆ᵖ_ 
+infix 4 _∩_
+infix 3 _∈_
+infix 3 _⊆_ 
 
 ------------------------------------------------------------------------
 
 -- Powerset
-ℙ : {ℓ : Level} → Set ℓ → Set (lsuc lzero ⊔ ℓ)
-ℙ A = A → Set
+ℙ : {ℓ : Level} (k : Level) → Set ℓ → Set (lsuc k ⊔ ℓ)
+ℙ k A = A → Set k
 
-_∈_ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → Set
+_∈_ : {ℓ k : Level} {A : Set ℓ} → A → ℙ k A → Set k
 x ∈ S = S x
 
-_∉_ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → Set
-x ∉ S = ¬ᵖ (x ∈ S)
+_∉_ : {ℓ k : Level} {A : Set ℓ} → A → ℙ k A → Set k
+x ∉ S = ¬ (S x)
 
--- The empty subset
-empty : {ℓ : Level} (A : Set ℓ) → ℙ A
-empty A  = λ x → ⊥ᵖ
+-- data ⊥ℓ {ℓ : Level} : Set ℓ where
+
+-- -- The empty subset
+-- empty : {ℓ k : Level} (A : Set ℓ) → ℙ k A
+-- empty A  = λ x → ⊥ℓ
+
+-- data ⊤ℓ {ℓ : Level} : Set ℓ where 
+--     ⊤ℓ-intro : ⊤ℓ
+
+-- -- The full subset
+-- full : {ℓ k : Level} (A : Set ℓ) → ℙ k A
+-- full A = λ x → ⊤ℓ
+
+data empty {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
+
 
 -- The full subset
-full : {ℓ : Level} (A : Set ℓ) → ℙ A
-full A = λ x → ⊤ᵖ
+data full {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
+  full-intro : full A x
 
--- Equality of elements
-data _≡ᵉ_ {a : Level} {A : Set a} (x : A) : A → Set where
-  instance reflᵉ : x ≡ᵉ x
+
 
 -- The singelton 
-singelton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ A
-singelton * = λ x → x ≡ᵉ *
+singelton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ ℓ A
+singelton * = λ x → x ≡ *
 
 -- Subset relation
-_⊆_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Set ℓ
+_⊆_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → Set (ℓ ⊔ k ⊔ m)
 S ⊆ T = ∀ x → x ∈ S → x ∈ T
 
--- Subset relation returns Set₀
-_⊆ᵖ_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Set
-S ⊆ᵖ T = ⟪ S ⊆ T ⟫
-
 -- Complement
-_ᶜ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A
+_ᶜ : {ℓ k : Level} {A : Set ℓ} → ℙ k A → ℙ k A
 _ᶜ S = λ x → x ∉ S
 
--- Equality relation for power set that returns Prop
-_≡ᵖ_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Set
-S ≡ᵖ T =  S ⊆ᵖ T ∧ᵖ T ⊆ᵖ S 
 
--- Subset extensionality
-postulate subset-ext : {ℓ : Level} {A : Set ℓ} {S T : ℙ A} → (∀ x → S x ≡ T x) → S ≡ T
-
-⊆-⊇-≡ : {ℓ : Level} {A : Set ℓ} (S T : ℙ A) → S ⊆ T → T ⊆ S → S ≡ T
-⊆-⊇-≡ S T S⊆T T⊆S = subset-ext λ x → prop-ext (S⊆T x) (T⊆S x)
+postulate ⊆-⊇-≡ : {ℓ k : Level} {A : Set ℓ} (S T : ℙ k A) → S ⊆ T → T ⊆ S → S ≡ T
 
 -- Union of a family
-union : {ℓ k : Level} {I : Set ℓ} {A : Set k} → (I → ℙ A) → ℙ A
-union S x = ∃ᵖ (λ i → x ∈ S i)
+union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} → (I → ℙ j A) → ℙ (ℓ ⊔ j) A
+union {I = I} S x = Σ[ i ∈ I ] S i x
 
 -- union of subfamily of B 
-unionᵇ : {ℓ k : Level} {X : Set ℓ} {I : Set k}
-    → (B : I → ℙ X) 
-    → (J : ℙ I)
-    → ℙ X
-unionᵇ {I = I} B J = λ x → ∃ᵖ (λ (i : I) → i ∈ J ∧ᵖ x ∈ B i ) 
+unionᵇ : {ℓ k j m : Level} {X : Set ℓ} {I : Set k}
+    → (B : I → ℙ j X) 
+    → (J : ℙ m I)
+    → ℙ (k ⊔ j ⊔ m) X
+unionᵇ {I = I} B J x = Σ[ i ∈ I ] (J i × B i x)
 
 -- Binary intersection
-_∩_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → ℙ A
-U ∩ V = λ x → U x ∧ᵖ V x
+_∩_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → ℙ (k ⊔ m) A
+U ∩ V = λ x → U x × V x
 
--- -- Countable set
--- -- record countable₁ {ℓ} (A : Set ℓ) = Set where 
--- -- -- ??? Setω₁ 
--- --     field 
--- --         ϕ = {!   !}
--- --         ϕ-injective = {!   !}
+∩-⊆-left : {ℓ k m : Level} {A : Set ℓ} (U : ℙ k A) (V : ℙ m A) → U ∩ V ⊆ U
+∩-⊆-left U V x (Ux , _) = Ux
 
--- -- countable₂ : ?
--- -- countable₂ A = empty A → ⊤ᵖ
--- -- countable₂ A = empty A → ⊤ᵖ
+∩-⊆-right : {ℓ k m : Level} {A : Set ℓ} (U : ℙ k A) (V : ℙ m A) → U ∩ V ⊆ V
+∩-⊆-right U V x (_ , Vx) = Vx
