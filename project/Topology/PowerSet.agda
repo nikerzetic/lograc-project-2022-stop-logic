@@ -52,7 +52,6 @@ data full {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
   full-intro : full A x
 
 
-
 -- The singelton 
 singelton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ ℓ A
 singelton * = λ x → x ≡ *

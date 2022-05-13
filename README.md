@@ -34,12 +34,14 @@ You may not need all of these, but be ready to formalize them as needed:
 
 - [X] definition of a continuous map (inverse image preserves opens)
 - [X] continuous map is continuous
-- [ ] constant map is continuous
+- [X] constant map is continuous
 - [X] composition of continuous maps is continuous
 - [X] every map from space with discrete topology is continuous
-- [ ] every map to space with indiscrete topology is continuous
-- [X] definition of a homeomorphism
+- [X] every map to space with indiscrete topology is continuous
+- [ ] definition of a homeomorphism
 - [ ] identity map is a homeomorphism
+- [ ] compositions of homeomorphism is homeomorphism
+- [ ] inverse of homeomorphism is homeomorphism
 
 ### Constructions - N*
 

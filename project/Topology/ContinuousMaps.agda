@@ -42,7 +42,6 @@ image : {ℓ k m : Level}
     → ℙ m X
     → ℙ (ℓ ⊔ k ⊔ m) Y
 image {X = X} {Y = Y} f A y = Σ[ x ∈ X ] (A x × y ≡ (f x))
--- λ (y : Y) → (∃ (λ (x : X) → ((x ∈ A) ∧ᵖ (singelton (f x) ≡ᵖ singelton y))))
 
 -- Definition for continuous map
 isContinuous : {ℓ k m n₁ n₂ : Level}
@@ -84,28 +83,22 @@ constF * = λ x → *
 emptyFullPreimage : {ℓ k m : Level} {X : Set ℓ} {Y : Set k} (U : ℙ m Y) (* : Y) → ℙ (k ⊔ m) X
 emptyFullPreimage U * = preimage (constF *) (U ∩ singelton *)
 
--- Druzina indeksirana z dokazi p-ja
-cow : {ℓ m : Level} {X : Set ℓ} → (p : Set) → p → ℙ m X
-cow {X = X} p _ = full X
-
 constIsContinuous : {ℓ k m n : Level} {X : Set ℓ} {Y : Set k}
     {T₁ : topology m n X} {T₂ : topology m n Y}
     → (* : Y)
     → isContinuous T₁ T₂ (constF *)
 constIsContinuous {ℓ} {k} {m} {n} {X = X} {T₁ = T₁} {T₂ = T₂} * U Uopen =
   subst (Open T₁) V≡pre OpenV
-  where
+  where 
     V : ℙ m X
-    V = union {I = U *} {A = X} (λ _ → full {k = m} X)
+    V = union {I = U *} {A = X} λ _ → full X
 
     OpenV : Open T₁ V
-    OpenV = union-open T₁ ((λ _ → full {k = m} X)) λ i → full-open T₁
+    OpenV = union-open T₁ (λ _ → full X) (λ i → full-open T₁)
 
     V≡pre : V ≡ (λ _ → U *)
-    V≡pre = ⊆-⊇-≡ V (λ _ → U *) (λ { x (x∈U* , _) → x∈U* }) (λ x p → p , full-intro)
-
-
-
+    V≡pre = ⊆-⊇-≡ V (λ _ → U *) (λ x (x∈U* , _) → x∈U*) λ x p → p , full-intro
+    
 
 -- vsaka preslikava iz prostora z diskretno topologijo je zvezna
 fromDiscreteContinuous : {ℓ k m n : Level} {X : Set ℓ} {Y : Set k}
@@ -115,11 +108,25 @@ fromDiscreteContinuous : {ℓ k m n : Level} {X : Set ℓ} {Y : Set k}
 fromDiscreteContinuous f = λ U U⊆ᵒY → ⊤ℓ-intro
 
 -- vsaka preslikava v prostor s trivialno topologijo je zvezna TODO
-toIndiscreteContinuous : {ℓ k m n : Level} {X : Set ℓ} {Y : Set k}
-    → {T : topology m n X}
+toIndiscreteContinuous : {m : Level} {X : Set m} {Y : Set m}
+    → {T : topology m lzero X}
     → (f : X → Y)
     → isContinuous T (indiscrete-topology Y) f
-toIndiscreteContinuous {T = T} f = λ U U⊆ᵒY → {!   !}
+toIndiscreteContinuous {m} {X = X} {Y = Y} {T = T} f U U⊆ᵒY =  
+    subst (Open T) V≡pre-fU OpenV
+    where 
+    V : ℙ m X
+    V = union {I = (full {k = m} Y) ⊆ U} λ _ → full X
+
+    OpenV : Open T V
+    OpenV = union-open T (λ _ → full X) λ i → full-open T
+
+    V≡pre-fU : V ≡ (λ x → U (f x))
+    V≡pre-fU = ⊆-⊇-≡ 
+        V 
+        (λ x → U (f x)) 
+        (λ x x∈V → proj₁ x∈V (f x) full-intro) 
+        (λ x p → (λ y _ → U⊆ᵒY (f x) p y) , full-intro)
 
 
 -- record _≃_ {ℓ m : Level} (A : Set ℓ) (B : Set m) : Set (ℓ ⊔ m) where
