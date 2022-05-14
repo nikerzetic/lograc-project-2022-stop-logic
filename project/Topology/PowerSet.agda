@@ -15,10 +15,6 @@ open import Data.Product
 
 ------------------------------------------------------------------------
 
-infix 10 _∩_
-infix 9 _∈_
-infix 8 _⊆_ 
-infix 8 _⊆ᵖ_ 
 infix 4 _∩_
 infix 3 _∈_
 infix 3 _⊆_
@@ -32,18 +28,18 @@ infix 3 _⊆_
 _∈_ : {k ℓ : Level} {A : Set ℓ} → A → ℙ k A → Set k
 x ∈ S = S x
 
-data 𝟘 {ℓ : Level} : Set ℓ where
+data ⊥ℓ {ℓ : Level} : Set ℓ where 
+
+data ⊤ℓ {ℓ : Level} : Set ℓ where
+  ⊤ℓ-intro : ⊤ℓ
 
 -- The empty subset
-empty : {ℓ k : Level} (A : Set ℓ) → ℙ k A
-empty _ _ = 𝟘
+data empty {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
 
-data 𝟙 {ℓ : Level} : Set ℓ where
-  𝟙-intro : 𝟙
 
 -- The full subset
-full : {ℓ k : Level} (A : Set ℓ) → ℙ k A
-full _ _ = 𝟙
+data full {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
+  full-intro : full A x
 
 -- Subset relation
 _⊆_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → Set (ℓ ⊔ k ⊔ m)
