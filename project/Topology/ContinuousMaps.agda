@@ -12,7 +12,6 @@ open import Topology.PowerSet
 open import Data.Product
 open import Topology.Core
 open import Relation.Binary.PropositionalEquality as Eq
-open Eq using (_≡_; refl; sym; trans; cong; subst; resp)
 open Eq.≡-Reasoning using (begin_; _≡⟨⟩_; step-≡; step-≡˘; _∎)
 
 ------------------------------------------------------------------------
@@ -107,26 +106,52 @@ fromDiscreteContinuous : {ℓ k m n : Level} {X : Set ℓ} {Y : Set k}
     → isContinuous (discrete-topology X) T f
 fromDiscreteContinuous f = λ U U⊆ᵒY → ⊤ℓ-intro
 
--- vsaka preslikava v prostor s trivialno topologijo je zvezna TODO
-toIndiscreteContinuous : {m : Level} {X : Set m} {Y : Set m}
+
+-- vsaka preslikava v prostor s trivialno topologijo je zvezna
+-- Za index set uporabljamo "Y ⊆ U"
+-- toIndiscreteContinuous : {m : Level} {X : Set m} {Y : Set m}
+--     → {T : topology m lzero X}
+--     → (f : X → Y)
+--     → isContinuous T (indiscrete-topology Y) f
+-- toIndiscreteContinuous {m} {X = X} {Y = Y} {T = T} f U U⊆ᵒY =  
+--     subst (Open T) V≡pre-fU OpenV
+--     where 
+--     V : ℙ m X
+--     V = union {I = (full {k = m} Y) ⊆ U} λ _ → full X
+
+--     OpenV : Open T V
+--     OpenV = union-open T (λ _ → full X) λ i → full-open T
+
+--     V≡pre-fU : V ≡ (λ x → U (f x))
+--     V≡pre-fU = ⊆-⊇-≡ 
+--         V 
+--         (λ x → U (f x)) 
+--         (λ x x∈V → proj₁ x∈V (f x) full-intro) 
+--         (λ x p → (λ y _ → U⊆ᵒY (f x) p y) , full-intro)
+
+-- Same thing, with index set "there exists an element in U". 
+-- Here, we can have different level of set X
+toIndiscreteContinuous : {ℓ m : Level} {X : Set ℓ} {Y : Set m}
     → {T : topology m lzero X}
     → (f : X → Y)
     → isContinuous T (indiscrete-topology Y) f
-toIndiscreteContinuous {m} {X = X} {Y = Y} {T = T} f U U⊆ᵒY =  
-    subst (Open T) V≡pre-fU OpenV
+toIndiscreteContinuous {ℓ} {m} {X = X} {Y = Y} {T = T} f U U⊆ᵒY =  
+    -- subst (Open T) V≡pre-fU OpenV
+    subst (Open T) V≡pre-fU (OpenV)
     where 
     V : ℙ m X
-    V = union {I = (full {k = m} Y) ⊆ U} λ _ → full X
+    V = union {I = Σ[ y ∈ Y ] y ∈ U} λ _ → full {k = m} X
 
     OpenV : Open T V
-    OpenV = union-open T (λ _ → full X) λ i → full-open T
+    OpenV = union-open T (λ _ → full X) (λ i → full-open T)
 
     V≡pre-fU : V ≡ (λ x → U (f x))
     V≡pre-fU = ⊆-⊇-≡ 
         V 
         (λ x → U (f x)) 
-        (λ x x∈V → proj₁ x∈V (f x) full-intro) 
-        (λ x p → (λ y _ → U⊆ᵒY (f x) p y) , full-intro)
+        (λ x ((p₁ , p₂) , q) → U⊆ᵒY p₁ p₂ (f x))
+        (λ x p → (f x , p) , full-intro)
+
 
 -- Definition of a homeomorphism
 isHomeomorphism : {ℓ k m n o : Level} {X : Set ℓ} {Y : Set k}
