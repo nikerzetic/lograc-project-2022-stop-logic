@@ -96,4 +96,14 @@ base {ℓ = ℓ} {k = k} {j = j} {X = X} {I = I} B Bcovers Bbase =
             B-∈-B (∈-B x∈U OpenU) (∈-B x∈V OpenV))
 
     union-open' : {J : Set j} (S : J → ℙ j X) → ((m : J) → Open' (S m)) → Open' (union S)
-    union-open' S OpenSm x∈US = {!   !} , ({!   !} , {!   !})
+    union-open' S OpenSm x∈US = 
+        -- {!   !} ,
+        -- (λ m → index-of (S m) (OpenSm m)) (union-index-of x∈US) , 
+        index-of (S (union-index-of x∈US)) (OpenSm (union-index-of x∈US)) , 
+            ((λ x x∈Bi → {!  (λ m → B-⊆ (S m) (OpenSm m)) (union-index-of x∈US) !}) , 
+            {!   !})
+
+        -- (λ m → 
+        --     {!   !} ,
+        --     ({!   !} , {!   !})
+        -- ) (union-index-of x∈US)
