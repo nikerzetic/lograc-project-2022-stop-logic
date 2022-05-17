@@ -12,6 +12,7 @@ open import Data.Bool
 open import Data.Empty
 open import Data.Unit
 open import Data.Product
+open import Relation.Nullary
 
 ------------------------------------------------------------------------
 
@@ -28,22 +29,27 @@ infix 3 _⊆_
 _∈_ : {k ℓ : Level} {A : Set ℓ} → A → ℙ k A → Set k
 x ∈ S = S x
 
-data ⊥ℓ {ℓ : Level} : Set ℓ where 
-
-data ⊤ℓ {ℓ : Level} : Set ℓ where
-  ⊤ℓ-intro : ⊤ℓ
+_∉_ : {ℓ k : Level} {A : Set ℓ} → A → ℙ k A → Set k
+x ∉ S = ¬ (S x)
 
 -- The empty subset
 data empty {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
-
 
 -- The full subset
 data full {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
   full-intro : full A x
 
+-- The singelton 
+singelton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ ℓ A
+singelton * = λ x → x ≡ *
+
 -- Subset relation
 _⊆_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → Set (ℓ ⊔ k ⊔ m)
-S ⊆ T = ∀ x → S x → T x
+S ⊆ T = ∀ x → x ∈ S → x ∈ T
+
+-- Complement
+_ᶜ : {ℓ k : Level} {A : Set ℓ} → ℙ k A → ℙ k A
+_ᶜ S = λ x → x ∉ S
 
 ∈-⊆-∈ : {ℓ k : Level} {A : Set ℓ} {U V : ℙ k A} {x : A}
   → (x∈U : x ∈ U) → (U⊆V : U ⊆ V) → x ∈ V
@@ -55,6 +61,13 @@ postulate ⊆-⊇-≡ : {ℓ k : Level} {A : Set ℓ} (S T : ℙ k A) → S ⊆ 
 -- Union of a family
 union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} → (I → ℙ j A) → ℙ (ℓ ⊔ j) A
 union {I = I} S x = Σ[ i ∈ I ] x ∈ S i
+
+-- union of subfamily of B 
+unionᵇ : {ℓ k j m : Level} {X : Set ℓ} {I : Set k}
+    → (B : I → ℙ j X) 
+    → (J : ℙ m I)
+    → ℙ (k ⊔ j ⊔ m) X
+unionᵇ {I = I} B J x = Σ[ i ∈ I ] (J i × B i x)
 
 union-index-of : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
   → (x∈US : x ∈ union S) → I
@@ -70,6 +83,7 @@ union-index-of x∈US = proj₁ x∈US
 
 -- ⊆-member-⊆-union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
 --   → (x∈US : x ∈ union S) → x ∈ S (union-index-of {S = S} x∈US)
+
 
 -- Binary intersection
 _∩_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → ℙ (k ⊔ m) A
