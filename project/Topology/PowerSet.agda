@@ -45,16 +45,27 @@ data full {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
 _⊆_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → Set (ℓ ⊔ k ⊔ m)
 S ⊆ T = ∀ x → S x → T x
 
+∈-⊆-∈ : {ℓ k : Level} {A : Set ℓ} {U V : ℙ k A} {x : A}
+  → (x∈U : x ∈ U) → (U⊆V : U ⊆ V) → x ∈ V
+∈-⊆-∈ {x = x} x∈U U⊆V = U⊆V x x∈U
+
 -- Subset extensionality
 postulate ⊆-⊇-≡ : {ℓ k : Level} {A : Set ℓ} (S T : ℙ k A) → S ⊆ T → T ⊆ S → S ≡ T
 
 -- Union of a family
 union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} → (I → ℙ j A) → ℙ (ℓ ⊔ j) A
-union {I = I} S x = Σ[ i ∈ I ] S i x
+union {I = I} S x = Σ[ i ∈ I ] x ∈ S i
 
 union-index-of : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
   → (x∈US : x ∈ union S) → I
 union-index-of x∈US = proj₁ x∈US
+
+∈-union-∈-member : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
+  → (x∈US : x ∈ union S) → x ∈ S (union-index-of {S = S} x∈US)
+∈-union-∈-member x∈US = proj₂ x∈US  
+
+-- ⊆-member-⊆-union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
+--   → (x∈US : x ∈ union S) → x ∈ S (union-index-of {S = S} x∈US)
 
 -- Binary intersection
 _∩_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → ℙ (k ⊔ m) A
