@@ -13,44 +13,31 @@ open import Data.Empty
 open import Data.Unit
 open import Data.Product
 open import Relation.Nullary
+
 ------------------------------------------------------------------------
 
 infix 4 _∩_
 infix 3 _∈_
-infix 3 _⊆_ 
+infix 3 _⊆_
 
 ------------------------------------------------------------------------
 
--- Powerset
-ℙ : {ℓ : Level} (k : Level) → Set ℓ → Set (lsuc k ⊔ ℓ)
+-- Predicative “powerset”
+ℙ : {ℓ : Level} (k : Level) → Set ℓ → Set (ℓ ⊔ lsuc k)
 ℙ k A = A → Set k
 
-_∈_ : {ℓ k : Level} {A : Set ℓ} → A → ℙ k A → Set k
+_∈_ : {k ℓ : Level} {A : Set ℓ} → A → ℙ k A → Set k
 x ∈ S = S x
 
 _∉_ : {ℓ k : Level} {A : Set ℓ} → A → ℙ k A → Set k
 x ∉ S = ¬ (S x)
 
--- data ⊥ℓ {ℓ : Level} : Set ℓ where
-
--- -- The empty subset
--- empty : {ℓ k : Level} (A : Set ℓ) → ℙ k A
--- empty A  = λ x → ⊥ℓ
-
--- data ⊤ℓ {ℓ : Level} : Set ℓ where 
---     ⊤ℓ-intro : ⊤ℓ
-
--- -- The full subset
--- full : {ℓ k : Level} (A : Set ℓ) → ℙ k A
--- full A = λ x → ⊤ℓ
-
+-- The empty subset
 data empty {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
-
 
 -- The full subset
 data full {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
   full-intro : full A x
-
 
 -- The singelton 
 singelton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ ℓ A
@@ -64,7 +51,6 @@ S ⊆ T = ∀ x → x ∈ S → x ∈ T
 _ᶜ : {ℓ k : Level} {A : Set ℓ} → ℙ k A → ℙ k A
 _ᶜ S = λ x → x ∉ S
 
-
 postulate ⊆-⊇-≡ : {ℓ k : Level} {A : Set ℓ} (S T : ℙ k A) → S ⊆ T → T ⊆ S → S ≡ T
 
 -- Union of a family
@@ -77,6 +63,11 @@ unionᵇ : {ℓ k j m : Level} {X : Set ℓ} {I : Set k}
     → (J : ℙ m I)
     → ℙ (k ⊔ j ⊔ m) X
 unionᵇ {I = I} B J x = Σ[ i ∈ I ] (J i × B i x)
+
+union-index-of : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
+  → (x∈US : x ∈ union S) → I
+union-index-of x∈US = proj₁ x∈US
+
 
 -- Binary intersection
 _∩_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → ℙ (k ⊔ m) A
