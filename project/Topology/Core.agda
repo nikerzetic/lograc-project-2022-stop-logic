@@ -99,11 +99,6 @@ base {ℓ = ℓ} {k = k} {j = j} {X = X} {I = I} B Bcovers Bbase =
     union-open' S OpenSm x∈US = 
         index-of (∈-union-∈-member {S = S} x∈US) (OpenSm (union-index-of {S = S} x∈US)) ,
             ((λ x x∈Bi → 
-                -- {!  (B-⊆ (∈-union-∈-member {S = S} x∈US) (OpenSm (union-index-of {S = S} x∈US)))   !}) , 
-                {!  (∈-⊆-∈ x∈Bi (B-⊆ (∈-union-∈-member {S = S} x∈US) (OpenSm (union-index-of {S = S} x∈US))))  !}) , 
-            {!   !})
-
-        -- (λ m → 
-        --     {!   !} ,
-        --     ({!   !} , {!   !})
-        -- ) (union-index-of x∈US)
+                ∈-member-∈-union {S = S} (∈-⊆-∈ x∈Bi (B-⊆ 
+                    (∈-union-∈-member {S = S} x∈US) (OpenSm (union-index-of {S = S} x∈US))))) , 
+            ∈-B (∈-union-∈-member {S = S} x∈US) (OpenSm (union-index-of {S = S} x∈US)))

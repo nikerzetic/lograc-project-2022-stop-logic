@@ -62,7 +62,11 @@ union-index-of x∈US = proj₁ x∈US
 
 ∈-union-∈-member : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
   → (x∈US : x ∈ union S) → x ∈ S (union-index-of {S = S} x∈US)
-∈-union-∈-member x∈US = proj₂ x∈US  
+∈-union-∈-member x∈US = proj₂ x∈US
+
+∈-member-∈-union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} {i : I}
+  → (x∈Si : x ∈ S i) → x ∈ union S
+∈-member-∈-union {i = i} x∈Si = i , x∈Si
 
 -- ⊆-member-⊆-union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
 --   → (x∈US : x ∈ union S) → x ∈ S (union-index-of {S = S} x∈US)
