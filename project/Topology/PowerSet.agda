@@ -4,72 +4,93 @@
 -- Subsets and power sets
 ------------------------------------------------------------------------
 
-{-# OPTIONS --prop #-}
-
 module Topology.PowerSet where
 
 open import Agda.Primitive
 open import Relation.Binary.PropositionalEquality
 open import Data.Bool
-open import Topology.Logic
+open import Data.Empty
+open import Data.Unit
+open import Data.Product
+open import Relation.Nullary
 
 ------------------------------------------------------------------------
 
 infix 4 _∩_
 infix 3 _∈_
-infix 3 _⊆_ 
+infix 3 _⊆_
 
 ------------------------------------------------------------------------
 
--- Powerset
-ℙ : {ℓ : Level} → Set ℓ → Set (lsuc lzero ⊔ ℓ)
-ℙ A = A → Prop
+-- Predicative “powerset”
+ℙ : {ℓ : Level} (k : Level) → Set ℓ → Set (ℓ ⊔ lsuc k)
+ℙ k A = A → Set k
 
-_∈_ : {ℓ : Level} {A : Set ℓ} → A → ℙ A → Prop
+_∈_ : {k ℓ : Level} {A : Set ℓ} → A → ℙ k A → Set k
 x ∈ S = S x
 
+_∉_ : {ℓ k : Level} {A : Set ℓ} → A → ℙ k A → Set k
+x ∉ S = ¬ (S x)
+
 -- The empty subset
-empty : {ℓ : Level} (A : Set ℓ) → ℙ A
-empty _ _ = ⊥ᵖ
+data empty {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
 
 -- The full subset
-full : {ℓ : Level} (A : Set ℓ) → ℙ A
-full _ _ = ⊤ᵖ
+data full {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
+  full-intro : full A x
+
+-- The singelton 
+singelton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ ℓ A
+singelton * = λ x → x ≡ *
 
 -- Subset relation
-_⊆_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop ℓ
+_⊆_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → Set (ℓ ⊔ k ⊔ m)
 S ⊆ T = ∀ x → x ∈ S → x ∈ T
 
--- Equality relation that returns Prop
-_≡ᵖ_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → Prop
-S ≡ᵖ T = ⟪ S ⊆ T ⟫ ∧ᵖ ⟪ T ⊆ S ⟫
+-- Complement
+_ᶜ : {ℓ k : Level} {A : Set ℓ} → ℙ k A → ℙ k A
+_ᶜ S = λ x → x ∉ S
+
+∈-⊆-∈ : {ℓ k : Level} {A : Set ℓ} {U V : ℙ k A} {x : A}
+  → (x∈U : x ∈ U) → (U⊆V : U ⊆ V) → x ∈ V
+∈-⊆-∈ {x = x} x∈U U⊆V = U⊆V x x∈U
 
 -- Subset extensionality
-postulate subset-ext : {ℓ : Level} {A : Set ℓ} {S T : ℙ A} → (∀ x → S x ≡ T x) → S ≡ T
-
-⊆-⊇-≡ : {ℓ : Level} {A : Set ℓ} (S T : ℙ A) → S ⊆ T → T ⊆ S → S ≡ T
-⊆-⊇-≡ S T S⊆T T⊆S = subset-ext λ x → prop-ext (S⊆T x) (T⊆S x)
+postulate ⊆-⊇-≡ : {ℓ k : Level} {A : Set ℓ} (S T : ℙ k A) → S ⊆ T → T ⊆ S → S ≡ T
 
 -- Union of a family
-union : {ℓ k : Level} {I : Set ℓ} {A : Set k} → (I → ℙ A) → ℙ A
-union S x = ∃ᵖ (λ i → x ∈ S i)
+union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} → (I → ℙ j A) → ℙ (ℓ ⊔ j) A
+union {I = I} S x = Σ[ i ∈ I ] x ∈ S i
+
+-- union of subfamily of B 
+unionᵇ : {ℓ k j m : Level} {X : Set ℓ} {I : Set k}
+    → (B : I → ℙ j X) 
+    → (J : ℙ m I)
+    → ℙ (k ⊔ j ⊔ m) X
+unionᵇ {I = I} B J x = Σ[ i ∈ I ] (J i × B i x)
+
+union-index-of : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
+  → (x∈US : x ∈ union S) → I
+union-index-of x∈US = proj₁ x∈US
+
+∈-union-∈-member : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
+  → (x∈US : x ∈ union S) → x ∈ S (union-index-of {S = S} x∈US)
+∈-union-∈-member x∈US = proj₂ x∈US
+
+∈-member-∈-union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} {i : I}
+  → (x∈Si : x ∈ S i) → x ∈ union S
+∈-member-∈-union {i = i} x∈Si = i , x∈Si
+
+-- ⊆-member-⊆-union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
+--   → (x∈US : x ∈ union S) → x ∈ S (union-index-of {S = S} x∈US)
+
 
 -- Binary intersection
-_∩_ : {ℓ : Level} {A : Set ℓ} → ℙ A → ℙ A → ℙ A
-U ∩ V = λ x → U x ∧ᵖ V x
+_∩_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → ℙ (k ⊔ m) A
+U ∩ V = λ x → U x × V x
 
--- Subfamily 
-subfamily : {ℓ k : Level} {I J : Set ℓ} {A : Set k} 
-    → (I → ℙ A) → ((x : J) → x ∈ I) → (J → ℙ A)
-subfamily = {!   !}
+∩-⊆-left : {ℓ k m : Level} {A : Set ℓ} (U : ℙ k A) (V : ℙ m A) → U ∩ V ⊆ U
+∩-⊆-left U V x (Ux , _) = Ux
 
--- Countable set
--- record countable₁ {ℓ} (A : Set ℓ) = Set where 
--- -- ??? Setω₁ 
---     field 
---         ϕ = {!   !}
---         ϕ-injective = {!   !}
-
--- countable₂ : ?
--- countable₂ A = empty A → ⊤ᵖ
--- countable₂ A = empty A → ⊤ᵖ
+∩-⊆-right : {ℓ k m : Level} {A : Set ℓ} (U : ℙ k A) (V : ℙ m A) → U ∩ V ⊆ V
+∩-⊆-right U V x (_ , Vx) = Vx
