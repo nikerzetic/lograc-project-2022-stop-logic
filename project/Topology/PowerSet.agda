@@ -40,8 +40,8 @@ data full {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
   full-intro : full A x
 
 -- The singelton 
-singelton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ ℓ A
-singelton * = λ x → x ≡ *
+singleton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ ℓ A
+singleton * = λ x → x ≡ *
 
 -- Subset relation
 _⊆_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → Set (ℓ ⊔ k ⊔ m)
