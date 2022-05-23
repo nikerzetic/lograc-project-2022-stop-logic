@@ -81,10 +81,6 @@ union-index-of x∈US = proj₁ x∈US
   → (x∈Si : x ∈ S i) → x ∈ union S
 ∈-member-∈-union {i = i} x∈Si = i , x∈Si
 
--- ⊆-member-⊆-union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
---   → (x∈US : x ∈ union S) → x ∈ S (union-index-of {S = S} x∈US)
-
-
 -- Binary intersection
 _∩_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → ℙ (k ⊔ m) A
 U ∩ V = λ x → U x × V x
