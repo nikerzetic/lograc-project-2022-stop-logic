@@ -94,3 +94,12 @@ U ∩ V = λ x → U x × V x
 ∈-both-∈-∩ : {ℓ k m : Level} {A : Set ℓ} {x : A} {U : ℙ k A} {V : ℙ m A}
   → (x∈U : x ∈ U) → (x∈V : x ∈ V) → x ∈ U ∩ V
 ∈-both-∈-∩ x∈U x∈V = x∈U , x∈V
+
+∩-symetric : {ℓ k m : Level} {A : Set ℓ} {U : ℙ k A} {V : ℙ m A} {x : A}
+  → x ∈ U ∩ V → x ∈ V ∩ U
+∩-symetric x∈U∩V = proj₂ x∈U∩V , proj₁ x∈U∩V 
+
+∩-⊆-symetric : {ℓ k m n : Level} {A : Set ℓ} {U : ℙ k A} {V : ℙ m A} {B : ℙ n A}
+  → U ∩ V ⊆ B → V ∩ U ⊆ B
+∩-⊆-symetric {A = A} {U = U} {V = V} U∩V⊆B = 
+  λ x x∈V∩U → (U∩V⊆B x) (∩-symetric {A = A} {U = V} {V = U} {x = x} x∈V∩U)
