@@ -51,7 +51,7 @@ S ⊆ T = ∀ x → x ∈ S → x ∈ T
 _ᶜ : {ℓ k : Level} {A : Set ℓ} → ℙ k A → ℙ k A
 _ᶜ S = λ x → x ∉ S
 
-∈-⊆-∈ : {ℓ k : Level} {A : Set ℓ} {U V : ℙ k A} {x : A}
+∈-⊆-∈ : {ℓ k m : Level} {A : Set ℓ} {U : ℙ k A} {V : ℙ m A} {x : A}
   → (x∈U : x ∈ U) → (U⊆V : U ⊆ V) → x ∈ V
 ∈-⊆-∈ {x = x} x∈U U⊆V = U⊆V x x∈U
 
@@ -90,3 +90,7 @@ U ∩ V = λ x → U x × V x
 
 ∩-⊆-right : {ℓ k m : Level} {A : Set ℓ} (U : ℙ k A) (V : ℙ m A) → U ∩ V ⊆ V
 ∩-⊆-right U V x (_ , Vx) = Vx
+
+∈-both-∈-∩ : {ℓ k m : Level} {A : Set ℓ} {x : A} {U : ℙ k A} {V : ℙ m A}
+  → (x∈U : x ∈ U) → (x∈V : x ∈ V) → x ∈ U ∩ V
+∈-both-∈-∩ x∈U x∈V = x∈U , x∈V
