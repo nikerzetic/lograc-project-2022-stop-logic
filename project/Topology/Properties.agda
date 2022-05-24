@@ -104,11 +104,27 @@ separated-separated-from₁ A B ABsep =
     proj₁ ABsep , 
     proj₁ (proj₂ (proj₂ ABsep)) , 
     proj₁ (proj₂ (proj₂ (proj₂ (proj₂ ABsep)))) , 
-    ∩-U-0-∩-0 (proj₁ (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ ABsep)))))) (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ ABsep))))))
+    ∩-U-0-∩-0 (proj₁ (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ ABsep)))))) 
+        (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ ABsep))))))
+
+separated-separated-from₂ : {ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ ℓ₅ : Level} {X : Set ℓ₀} {τ : topology ℓ₁ ℓ₂ X} 
+    → (A : ℙ ℓ₃ X) → (B : ℙ ℓ₄ X) 
+    → (ABsep : separated {ℓ₁ = ℓ₁} {ℓ₂ = ℓ₂} {ℓ₅ = ℓ₅} {τ = τ} A B) 
+    → separated-from {ℓ₁ = ℓ₁} {ℓ₂ = ℓ₂} {ℓ₅ = ℓ₅} {τ = τ} B A
+separated-separated-from₂ {ℓ₄ = ℓ₄} {ℓ₅ = ℓ₅} {X = X} A B ABsep = 
+    proj₁ (proj₂ ABsep) , 
+    proj₁ (proj₂ (proj₂ (proj₂ ABsep))) , 
+    proj₁ (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ ABsep))))) , 
+    ∩-U-0-∩-0 (proj₁ (proj₂ (proj₂ (proj₂ (proj₂ ABsep))))) 
+        (∩-⊆-symetric {A = X} {U = proj₁ ABsep} 
+            {V = proj₁ (proj₂ ABsep)} {B = empty {k = ℓ₅} X}
+            (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ (proj₂ ABsep)))))))
+
+-- To je tako horrible - I hate myself. Zato obstajajo record tipi
 
 R₁-is-R₀ : {ℓ₀ ℓ₁ ℓ₂ ℓ₃ : Level}
     → (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → (isR₁ : is-R₁ {ℓ₃ = ℓ₃} X τ) 
     → is-R₀ {ℓ₃ = ℓ₃} X τ
 R₁-is-R₀ X τ isR₁ = λ x y disting → 
-    ({!   !} , {!   !}) , 
-    {!   !}
+    separated-separated-from₁ {τ = τ} (singleton x) (singleton y) (isR₁ x y disting) , 
+    separated-separated-from₂ {τ = τ} (singleton x) (singleton y) (isR₁ x y disting)
