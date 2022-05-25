@@ -83,7 +83,7 @@ is-T₂ {ℓ₃ = ℓ₃} X τ = ∀ (x y : X)
 is-regular : {ℓ₀ ℓ₁ ℓ₂ ℓ₃ : Level}
     → (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → Set (ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂ ⊔ ℓ₃)
 is-regular {ℓ₁ = ℓ₁} {ℓ₃ = ℓ₃} X τ = ∀ (x : X) → (Y : ℙ ℓ₁ X) 
-    → topology.Open τ (Y ᶜ) → ¬ (x ∈ Y)
+    → topology.Open τ (Y ᶜ) → x ∉ Y
     → separated {ℓ₅ = ℓ₃} {τ = τ} (singleton x) Y
 
 ------------------------------------------------------------------------
