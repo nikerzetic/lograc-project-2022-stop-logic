@@ -43,12 +43,11 @@ indistinguishable {ℓ₁ = ℓ₁} {X = X} {τ = τ} x y =
 -- Separation axioms
 
 -- Kolmogorov space
--- is-T₀ : {ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ ℓ₅ : Level}
---     → (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → {!   !}
--- is-T₀ {ℓ₃ = ℓ₃} X τ = ∀ (x y : X) 
---     → ¬ singleton x ≡ singleton y
---     → separated-from {ℓ₅ = ℓ₃} {τ = τ} (singleton x) (singleton y) ∨ 
---     separated-from {ℓ₅ = ℓ₃} {τ = τ} (singleton y) (singleton x)
+is-T₀ : {ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ ℓ₅ : Level}
+    → (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → Set (lsuc ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂)
+is-T₀ {ℓ₃ = ℓ₃} X τ = ∀ (x y : X) 
+    → ¬ singleton x ≡ singleton y
+    → ¬ indistinguishable {τ = τ} x y
 
 -- Symetric space
 is-R₀ : {ℓ₀ ℓ₁ ℓ₂ ℓ₃ : Level}
