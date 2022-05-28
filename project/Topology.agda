@@ -1,14 +1,11 @@
 ------------------------------------------------------------------------
--- Project ???
+-- Project: General Topology
 --
 -- Definitions of topological terms
 ------------------------------------------------------------------------
 
-{-# OPTIONS --prop #-}
-
 module Topology where
 
-open import Topology.Logic
 open import Topology.PowerSet
 open import Topology.Core
 open import Topology.ContinuousMaps

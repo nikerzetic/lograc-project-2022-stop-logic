@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
--- Project ???
+-- Project: General Topology
 --
 -- Sierpinski space
 ------------------------------------------------------------------------
@@ -109,3 +109,7 @@ base {ℓ = ℓ} {k = k} {j = j} {X = X} {I = I} B Bcovers Bbase =
                     (∈-union-∈-member {S = S} x∈US) (OpenSm (union-index-of {S = S} x∈US))))) , 
             ∈-B (∈-union-∈-member {S = S} x∈US) (OpenSm (union-index-of {S = S} x∈US)))
 
+-- -- Topological space
+-- topological-space : {ℓ₀ ℓ₁ ℓ₂ : Level} 
+--     → (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → {!   !}
+-- topological-space X τ = X × τ

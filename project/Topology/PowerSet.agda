@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
--- Project ???
+-- Project: General Topology
 --
 -- Subsets and power sets
 ------------------------------------------------------------------------
@@ -40,8 +40,8 @@ data full {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
   full-intro : full A x
 
 -- The singelton 
-singelton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ ℓ A
-singelton * = λ x → x ≡ *
+singleton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ ℓ A
+singleton * = λ x → x ≡ *
 
 -- Subset relation
 _⊆_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → Set (ℓ ⊔ k ⊔ m)
@@ -51,7 +51,7 @@ S ⊆ T = ∀ x → x ∈ S → x ∈ T
 _ᶜ : {ℓ k : Level} {A : Set ℓ} → ℙ k A → ℙ k A
 _ᶜ S = λ x → x ∉ S
 
-∈-⊆-∈ : {ℓ k : Level} {A : Set ℓ} {U V : ℙ k A} {x : A}
+∈-⊆-∈ : {ℓ k m : Level} {A : Set ℓ} {U : ℙ k A} {V : ℙ m A} {x : A}
   → (x∈U : x ∈ U) → (U⊆V : U ⊆ V) → x ∈ V
 ∈-⊆-∈ {x = x} x∈U U⊆V = U⊆V x x∈U
 
@@ -81,10 +81,6 @@ union-index-of x∈US = proj₁ x∈US
   → (x∈Si : x ∈ S i) → x ∈ union S
 ∈-member-∈-union {i = i} x∈Si = i , x∈Si
 
--- ⊆-member-⊆-union : {ℓ k j : Level} {I : Set ℓ} {A : Set k} {S : I → ℙ j A} {x : A} 
---   → (x∈US : x ∈ union S) → x ∈ S (union-index-of {S = S} x∈US)
-
-
 -- Binary intersection
 _∩_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → ℙ (k ⊔ m) A
 U ∩ V = λ x → U x × V x
@@ -94,3 +90,16 @@ U ∩ V = λ x → U x × V x
 
 ∩-⊆-right : {ℓ k m : Level} {A : Set ℓ} (U : ℙ k A) (V : ℙ m A) → U ∩ V ⊆ V
 ∩-⊆-right U V x (_ , Vx) = Vx
+
+∈-both-∈-∩ : {ℓ k m : Level} {A : Set ℓ} {x : A} {U : ℙ k A} {V : ℙ m A}
+  → (x∈U : x ∈ U) → (x∈V : x ∈ V) → x ∈ U ∩ V
+∈-both-∈-∩ x∈U x∈V = x∈U , x∈V
+
+∩-symetric : {ℓ k m : Level} {A : Set ℓ} {U : ℙ k A} {V : ℙ m A} {x : A}
+  → x ∈ U ∩ V → x ∈ V ∩ U
+∩-symetric x∈U∩V = proj₂ x∈U∩V , proj₁ x∈U∩V 
+
+∩-⊆-symetric : {ℓ k m n : Level} {A : Set ℓ} {U : ℙ k A} {V : ℙ m A} {B : ℙ n A}
+  → U ∩ V ⊆ B → V ∩ U ⊆ B
+∩-⊆-symetric {A = A} {U = U} {V = V} U∩V⊆B = 
+  λ x x∈V∩U → (U∩V⊆B x) (∩-symetric {A = A} {U = V} {V = U} {x = x} x∈V∩U)
