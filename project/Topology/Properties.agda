@@ -40,8 +40,8 @@ separated {ℓ₁ = ℓ₁} {ℓ₅ = ℓ₅} {X = X} {τ = τ} A B =
 indistinguishable : {X : Set ℓ₀} {τ : topology ℓ₁ ℓ₂ X} 
     → (x : X) → (y : X) → Set (ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂)
 indistinguishable {ℓ₁ = ℓ₁} {X = X} {τ = τ} x y = 
-    ∀ (U : ℙ ℓ₁ X) → topology.Open τ U → x ∈ U → y ∈ U 
-    × ∀ (V : ℙ ℓ₁ X) → topology.Open τ V → y ∈ V → x ∈ V
+    (∀ (U : ℙ ℓ₁ X) → topology.Open τ U → x ∈ U → y ∈ U)
+    × (∀ (V : ℙ ℓ₁ X) → topology.Open τ V → y ∈ V → x ∈ V)
 
 ------------------------------------------------------------------------
 -- Separation axioms
