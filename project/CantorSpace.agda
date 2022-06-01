@@ -12,6 +12,7 @@ open import Data.Bool
 open import Data.Nat
 open import Data.List
 open import Data.Product
+open import Data.Sum
 open import Function.Construct.Composition
 open import Topology.PowerSet
 open import Topology.Core
@@ -44,8 +45,15 @@ data _⊏_ : REL (List Bool) (ℕ → Bool) lzero where
     []⊏ : ∀ {a} → [] ⊏ a
     ∷⊏  : ∀ {a l} (l : List Bool) → l ⊏ shift a → a 0 ∷ l ⊏ a
 
+⊑'-⊏ : ∀ {l₁ l₂ a} → (l₁⊑'l₂ : l₁ ⊑' l₂) → (l₂⊏a : l₂ ⊏ a) → l₁ ⊏ a
+⊑'-⊏ []⊑' l₂⊏a = []⊏
+⊑'-⊏ {l₁} {l₂} (∷⊑' l₁⊑'l₂) (∷⊏ l l₂⊏a) = 
+    ∷⊏ {!  !} (⊑'-⊏ l₁⊑'l₂ l₂⊏a)
+
+------------------------------------------------------------------------
+
 B : List Bool → ℙ lzero (ℕ → Bool)
-B ℓ a = ℓ ⊏ a
+B l a = l ⊏ a
 
 -- Topology on the Cantor space
 τᶜ : topology lzero {!   !} (ℕ → Bool)
@@ -55,5 +63,9 @@ B ℓ a = ℓ ⊏ a
             {!   !})
 
     where
-        B[]=UB : ∀ {a} → a ∈ union B → a ∈ B []
-        B[]=UB {a} a∈UB = []⊏
+        B-[]-=-UB : ∀ {a} → a ∈ union B → a ∈ B []
+        B-[]-=-UB {a} a∈UB = []⊏
+
+        l₁⊑'l₂-Bl₂⊆Bl₁ : ∀ { l₁ l₂} (l₁⊑'l₂ : l₁ ⊑' l₂) → B l₂ ⊆ B l₁
+        l₁⊑'l₂-Bl₂⊆Bl₁ l₁⊑'l₂ = λ a a∈Bl₂ → {!   !}
+        
