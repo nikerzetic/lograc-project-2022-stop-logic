@@ -16,6 +16,7 @@ open import Data.Sum
 open import Function.Construct.Composition
 open import Topology.PowerSet
 open import Topology.Core
+open import Topology.Properties
 
 ------------------------------------------------------------------------
 
@@ -24,8 +25,9 @@ infix 4 _⊑'_
 
 ------------------------------------------------------------------------
 
-variable
-    ℓ₁ ℓ₂ ℓ₃ : Level
+private
+    variable
+        ℓ₁ ℓ₂ ℓ₃ : Level
 
 ------------------------------------------------------------------------
 
@@ -105,3 +107,8 @@ B l a = l ⊏ a
         ⊑'-⊎-⊑'-⊆ {l₁ = l₁} {l₂ = l₂} a∈Bl₁ a∈Bl₂ with ⊏-⊏-⊑'-⊎-⊑' a∈Bl₁ a∈Bl₂
         ... | inj₁ l₂⊑'l₁ = λ x x∈Bl₁ → x∈Bl₁ , ⊑'-⊏ l₂⊑'l₁ x∈Bl₁
         ... | inj₂ l₁⊑'l₂ = λ x x∈Bl₂ → ⊑'-⊏ l₁⊑'l₂ x∈Bl₂ , x∈Bl₂
+
+------------------------------------------------------------------------
+
+ℂ-is-T₀ : is-T₀ (ℕ → Bool) τᶜ
+ℂ-is-T₀ = λ a b indisting-a-b → {!   !}
