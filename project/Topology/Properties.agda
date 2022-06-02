@@ -18,9 +18,9 @@ open import Topology.Core
 
 ------------------------------------------------------------------------
 
-variable
-
-    ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ ℓ₅ : Level
+private
+    variable
+        ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ ℓ₅ : Level
 
 -- Sets separated by neighbourhoods 
 separated-from : {X : Set ℓ₀} {τ : topology ℓ₁ ℓ₂ X} 
@@ -47,10 +47,10 @@ indistinguishable {ℓ₁ = ℓ₁} {X = X} {τ = τ} x y =
 -- Separation axioms
 
 -- Kolmogorov space
-is-T₀ : (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → Set (lsuc ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂)
+is-T₀ : (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → Set (ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂)
 is-T₀ X τ = ∀ (x y : X) 
-    → ¬ singleton x ≡ singleton y
-    → ¬ indistinguishable {τ = τ} x y
+    → indistinguishable {τ = τ} x y
+    → x ≡ y
 
 -- Symetric space
 is-R₀ : (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → Set (ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂ ⊔ ℓ₃)
