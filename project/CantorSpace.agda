@@ -43,12 +43,13 @@ shift a = λ n → a (suc n)
 
 data _⊏_ : REL (List Bool) (ℕ → Bool) lzero where
     []⊏ : ∀ {a} → [] ⊏ a
-    ∷⊏  : ∀ {a l} (l : List Bool) → l ⊏ shift a → a 0 ∷ l ⊏ a
+    ∷⊏  : ∀ {a} {l : List Bool} → l ⊏ shift a → a 0 ∷ l ⊏ a
+
+    -- Implicitnost l ???
 
 ⊑'-⊏ : ∀ {l₁ l₂ a} → (l₁⊑'l₂ : l₁ ⊑' l₂) → (l₂⊏a : l₂ ⊏ a) → l₁ ⊏ a
 ⊑'-⊏ []⊑' l₂⊏a = []⊏
-⊑'-⊏ {l₁} {l₂} (∷⊑' l₁⊑'l₂) (∷⊏ l l₂⊏a) = 
-    ∷⊏ {!  !} (⊑'-⊏ l₁⊑'l₂ l₂⊏a)
+⊑'-⊏ {l₁} {l₂} (∷⊑' l₁⊑'l₂) (∷⊏ l₂⊏a) = ∷⊏ (⊑'-⊏ l₁⊑'l₂ l₂⊏a)
 
 ------------------------------------------------------------------------
 
@@ -58,7 +59,7 @@ B l a = l ⊏ a
 -- Topology on the Cantor space
 τᶜ : topology lzero {!   !} (ℕ → Bool)
 τᶜ = base B (λ a →  [] , []⊏) 
-        (λ x∈Bl₁ x∈Bl₂ → {!   !} , 
+        (λ x∈Bi x∈Bj → ∈-∈-list x∈Bi x∈Bj , 
             {!   !} , 
             {!   !})
 
@@ -67,5 +68,34 @@ B l a = l ⊏ a
         B-[]-=-UB {a} a∈UB = []⊏
 
         l₁⊑'l₂-Bl₂⊆Bl₁ : ∀ { l₁ l₂} (l₁⊑'l₂ : l₁ ⊑' l₂) → B l₂ ⊆ B l₁
-        l₁⊑'l₂-Bl₂⊆Bl₁ l₁⊑'l₂ = λ a a∈Bl₂ → {!   !}
+        l₁⊑'l₂-Bl₂⊆Bl₁ l₁⊑'l₂ = λ a a∈Bl₂ → ⊑'-⊏ l₁⊑'l₂ a∈Bl₂
+
+        ∷-⊑'-⊎-⊑' : ∀ {l₁ l₂} (x : Bool) 
+            → (l₂⊑'l₁⊎l₁⊑'l₂ : l₂ ⊑' l₁ ⊎ l₁ ⊑' l₂) 
+            → x ∷ l₂ ⊑' x ∷ l₁ ⊎ x ∷ l₁ ⊑' x ∷ l₂
+        ∷-⊑'-⊎-⊑' x (inj₁ l₂⊑'l₁) = inj₁ (∷⊑' {x = x} l₂⊑'l₁)
+        ∷-⊑'-⊎-⊑' x (inj₂ l₁⊑'l₂) = inj₂ (∷⊑' {x = x} l₁⊑'l₂)
+
+        ⊏-⊏-⊑'-⊑' : ∀ {l₁ l₂ a} → (l₁⊏a : l₁ ⊏ a) → (l₂⊏a : l₂ ⊏ a) 
+            → l₂ ⊑' l₁ ⊎ l₁ ⊑' l₂
+        ⊏-⊏-⊑'-⊑' l₁⊏a []⊏ = inj₁ []⊑'
+        ⊏-⊏-⊑'-⊑' []⊏ (∷⊏ l₂⊏a) = inj₂ []⊑'
+        ⊏-⊏-⊑'-⊑' {a = a} (∷⊏ l₁⊏a) (∷⊏ l₂⊏a) = 
+            ∷-⊑'-⊎-⊑' (a 0) (⊏-⊏-⊑'-⊑' l₁⊏a l₂⊏a)
+
+        ⊑'-⊎-⊑'-list : ∀ {l₁ l₂}
+            → (l₂⊑'l₁⊎l₁⊑'l₂ : l₂ ⊑' l₁ ⊎ l₁ ⊑' l₂) → List Bool
+        ⊑'-⊎-⊑'-list {l₂ = l₂} (inj₁ _) = l₂
+        ⊑'-⊎-⊑'-list {l₁ = l₁} (inj₂ _) = l₁
+
+        ∈-∈-list : ∀ {l₁ l₂ a} → (a∈Bl₁ : a ∈ B l₁) → (a∈Bl₂ : a ∈ B l₂)
+            → List Bool
+        ∈-∈-list a∈Bl₁ a∈Bl₂ = ⊑'-⊎-⊑'-list (⊏-⊏-⊑'-⊑' a∈Bl₁ a∈Bl₂)
         
+        ⊑'-⊎-⊑'-∈ : ∀ {l₁ l₂ a} 
+            → (a∈Bl₁ : a ∈ B l₁) → (a∈Bl₂ : a ∈ B l₂)
+            → a ∈ B (∈-∈-list a∈Bl₁ a∈Bl₂)
+        ⊑'-⊎-⊑'-∈ a∈Bl₁ a∈Bl₂ with ⊏-⊏-⊑'-⊑' a∈Bl₁ a∈Bl₂
+        ... | inj₁ _ = {!   !}
+        ... | inj₂ _ = {!   !}
+
