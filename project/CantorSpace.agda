@@ -8,6 +8,7 @@ module CantorSpace where
 
 open import Agda.Primitive
 open import Relation.Binary
+open import Relation.Binary.PropositionalEquality
 open import Data.Bool
 open import Data.Nat
 open import Data.List
@@ -66,6 +67,7 @@ B l a = l ⊏ a
             ⊑'-⊎-⊑'-⊆   x∈Bi x∈Bj)
 
     where
+
         B-[]-=-UB : ∀ {a} → a ∈ union B → a ∈ B []
         B-[]-=-UB {a} a∈UB = []⊏
 
@@ -110,5 +112,18 @@ B l a = l ⊏ a
 
 ------------------------------------------------------------------------
 
+_↾_ : (ℕ → Bool) → ℕ → List Bool
+a ↾ zero = a 0 ∷ []
+a ↾ suc n = a 0 ∷ (shift a) ↾ n
+
+↾-⊏ : ∀ {a n} → a ↾ n ⊏ a
+↾-⊏ {n = zero} = ∷⊏ []⊏
+↾-⊏ {a = a} {n = suc n} = ∷⊏ (↾-⊏ {a = shift a} {n = n})
+
+↾-⊏-≡ : ∀ {a b n} → a ↾ (suc n) ⊏ b → a n ≡ b n
+↾-⊏-≡ {n = zero} a↾⊏b = {!  !}
+↾-⊏-≡ {n = suc n} a↾⊏b = {!   !}
+
+-- Proof that the Cantor space is T₀
 ℂ-is-T₀ : is-T₀ (ℕ → Bool) τᶜ
-ℂ-is-T₀ = λ a b indisting-a-b → {!   !}
+ℂ-is-T₀ = λ a b indisting-a-b → {!  !}
