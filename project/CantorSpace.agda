@@ -60,7 +60,7 @@ B l a = l ⊏ a
 τᶜ : topology lzero {!   !} (ℕ → Bool)
 τᶜ = base B (λ a →  [] , []⊏) 
         (λ x∈Bi x∈Bj → ∈-∈-list x∈Bi x∈Bj , 
-            {!   !} , 
+            ⊑'-⊎-⊑'-∈ x∈Bi x∈Bj , 
             {!   !})
 
     where
@@ -95,7 +95,7 @@ B l a = l ⊏ a
         ⊑'-⊎-⊑'-∈ : ∀ {l₁ l₂ a} 
             → (a∈Bl₁ : a ∈ B l₁) → (a∈Bl₂ : a ∈ B l₂)
             → a ∈ B (∈-∈-list a∈Bl₁ a∈Bl₂)
-        ⊑'-⊎-⊑'-∈ a∈Bl₁ a∈Bl₂ with ⊏-⊏-⊑'-⊑' a∈Bl₁ a∈Bl₂
-        ... | inj₁ _ = {!   !}
-        ... | inj₂ _ = {!   !}
+        ⊑'-⊎-⊑'-∈ {l₁ = l₁} {l₂ = l₂} a∈Bl₁ a∈Bl₂ with ⊏-⊏-⊑'-⊑' a∈Bl₁ a∈Bl₂
+        ... | inj₁ _ = a∈Bl₂
+        ... | inj₂ _ = a∈Bl₁
 
