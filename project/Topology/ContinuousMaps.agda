@@ -80,7 +80,7 @@ constF * = λ x → *
 
 -- Proof that constant map is continuous
 emptyFullPreimage : {ℓ k m : Level} {X : Set ℓ} {Y : Set k} (U : ℙ m Y) (* : Y) → ℙ (k ⊔ m) X
-emptyFullPreimage U * = preimage (constF *) (U ∩ singelton *)
+emptyFullPreimage U * = preimage (constF *) (U ∩ singleton *)
 
 constIsContinuous : {ℓ k m n : Level} {X : Set ℓ} {Y : Set k}
     {T₁ : topology m n X} {T₂ : topology m n Y}

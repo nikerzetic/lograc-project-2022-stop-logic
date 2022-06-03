@@ -33,7 +33,6 @@ _∉_ : {ℓ k : Level} {A : Set ℓ} → A → ℙ k A → Set k
 x ∉ S = ¬ (S x)
 
 -- The empty subset
-<<<<<<< HEAD
 data empty {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
 
 -- The full subset
@@ -43,14 +42,6 @@ data full {ℓ k : Level} (A : Set ℓ) (x : A) : Set k where
 -- The singelton 
 singleton : {ℓ : Level} {A : Set ℓ} (* : A) → ℙ ℓ A
 singleton * = λ x → x ≡ *
-=======
-empty : {ℓ : Level} (A : Set ℓ) → ℙ A
-empty _ = λ _ → ⊥ᵖ
-
--- The full subset
-full : {ℓ : Level} (A : Set ℓ) → ℙ A
-full _ = λ _ → ⊤ᵖ
->>>>>>> carovNik
 
 -- Subset relation
 _⊆_ : {ℓ k m : Level} {A : Set ℓ} → ℙ k A → ℙ m A → Set (ℓ ⊔ k ⊔ m)
