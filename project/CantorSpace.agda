@@ -120,9 +120,9 @@ a ↾ zero = a 0 ∷ []
 a ↾ suc n = a 0 ∷ ((shift a) ↾ n)
 
 -- Series' head heads the series
-↾-⊏ : ∀ {a n} → a ↾ n ⊏ a
-↾-⊏ {n = zero} = ∷⊏ []⊏
-↾-⊏ {a = a} {n = suc n} = ∷⊏ (↾-⊏ {a = shift a} {n = n})
+↾-⊏ : ∀ (a : ℕ → Bool) → (n : ℕ) → a ↾ n ⊏ a
+↾-⊏ _ zero = ∷⊏ []⊏
+↾-⊏ a (suc n) = ∷⊏ (↾-⊏ (shift a) n)
 
 first-≡ : ∀ {x xs a} → x ∷ xs ⊏ a → x ≡ a 0
 first-≡ (∷⊏ x∷xs⊏a) = refl
@@ -137,14 +137,11 @@ first-≡ (∷⊏ x∷xs⊏a) = refl
 ℂ-is-T₀ : is-T₀ (ℕ → Bool) τᶜ
 ℂ-is-T₀ = λ a b indisting-a-b 
     → fun-ext (λ n → pointwise-equality a b n 
-        ((proj₁ indisting-a-b) (B (a ↾ n)) 
-            (↾-open {a = a} {n = n}) 
-            (↾-⊏ {a = a} {n = n})))
-            -- ??? To bi se najbrz dalo lepse napisati - z redefinicijo zgornjih funkcij (↾-open ↾-⊏)
+        ((proj₁ indisting-a-b) (B (a ↾ n)) (↾-open a n) (↾-⊏ a n)))
 
     where 
-        ↾-open : ∀ {a n} → topology.Open τᶜ (B (a ↾ n))
-        ↾-open {a} {n} = λ x∈B↾ 
+        ↾-open : ∀ (a : ℕ → Bool) → (n : ℕ) → topology.Open τᶜ (B (a ↾ n))
+        ↾-open a n = λ x∈B↾ 
             → (a ↾ n) , 
                 (λ y y∈B↾ → y∈B↾) , 
                 x∈B↾
