@@ -32,30 +32,30 @@ private
 
 ------------------------------------------------------------------------
 
--- data ℂ : ℕ → Bool 
-
--- 2^_ : Set → Set
--- 2^ A = A → Bool
-
+-- The relation of "is head/heads" for lists
 data _⊑'_ : Rel (List Bool) lzero where 
     []⊑' : ∀ {l}                            → [] ⊑' l
     ∷⊑'  : ∀ {x l₁ l₂} (l₁⊑'l₂ : l₁ ⊑' l₂) → (x ∷ l₁) ⊑' (x ∷ l₂)
 
+-- Shifts the series right by one
 shift : (ℕ → Bool) → (ℕ → Bool)
 shift a = λ n → a (suc n)
 
+-- The relation of "is head/heads" for a list and a series
 data _⊏_ : REL (List Bool) (ℕ → Bool) lzero where
-    []⊏ : ∀ {a} → [] ⊏ a
+    []⊏ : ∀ {a}                               → [] ⊏ a
     ∷⊏  : ∀ {a} {l : List Bool} → l ⊏ shift a → a 0 ∷ l ⊏ a
 
     -- Implicitnost l ???
 
+-- Transitivity for "heads" relations
 ⊑'-⊏ : ∀ {l₁ l₂ a} → (l₁⊑'l₂ : l₁ ⊑' l₂) → (l₂⊏a : l₂ ⊏ a) → l₁ ⊏ a
 ⊑'-⊏ []⊑' l₂⊏a = []⊏
 ⊑'-⊏ {l₁} {l₂} (∷⊑' l₁⊑'l₂) (∷⊏ l₂⊏a) = ∷⊏ (⊑'-⊏ l₁⊑'l₂ l₂⊏a)
 
 ------------------------------------------------------------------------
 
+-- The basis of the Cantor space topology
 B : List Bool → ℙ lzero (ℕ → Bool)
 B l a = l ⊏ a
 
@@ -112,18 +112,34 @@ B l a = l ⊏ a
 
 ------------------------------------------------------------------------
 
+-- Series' head of length n
 _↾_ : (ℕ → Bool) → ℕ → List Bool
 a ↾ zero = a 0 ∷ []
-a ↾ suc n = a 0 ∷ (shift a) ↾ n
+a ↾ suc n = a 0 ∷ ((shift a) ↾ n)
 
+-- Series' head heads the series
 ↾-⊏ : ∀ {a n} → a ↾ n ⊏ a
 ↾-⊏ {n = zero} = ∷⊏ []⊏
 ↾-⊏ {a = a} {n = suc n} = ∷⊏ (↾-⊏ {a = shift a} {n = n})
 
-↾-⊏-≡ : ∀ {a b n} → a ↾ (suc n) ⊏ b → a n ≡ b n
-↾-⊏-≡ {n = zero} a↾⊏b = {!  !}
-↾-⊏-≡ {n = suc n} a↾⊏b = {!   !}
+first-≡ : ∀ {x xs a} → x ∷ xs ⊏ a → x ≡ a 0
+first-≡ (∷⊏ x∷xs⊏a) = refl
+
+-- Head equality implies pointwise equality
+-- ↾-⊏-≡ : ∀ {a b n} → a ↾ (suc n) ⊏ b → a n ≡ b n
+↾-⊏-≡ : ∀ {a b n} → a ↾ n ⊏ b → a n ≡ b n
+↾-⊏-≡ {n = zero} a↾⊏b = first-≡ a↾⊏b
+↾-⊏-≡ {a} {b} {n = suc n} a↾⊏b = {!    !}
+
+-- Head containment implies head equality
+↾-⊏-↾-≡ : ∀ {a b n} → a ↾ n ⊏ b → a ↾ n ≡ b ↾ n
+↾-⊏-↾-≡ {n = zero} a↾n⊏b = {!   !}
+↾-⊏-↾-≡ {n = suc n} a↾n⊏b = {!  first-≡ a↾n⊏b !}
+
+-- Inductive series equality
+∀-↾-≡-↾-≡ : ∀ {a b} → (∀ {n} → a ↾ n ≡ b ↾ n) → a ≡ b
+∀-↾-≡-↾-≡ ∀n-a↾n≡b↾n = {!   !}
 
 -- Proof that the Cantor space is T₀
 ℂ-is-T₀ : is-T₀ (ℕ → Bool) τᶜ
-ℂ-is-T₀ = λ a b indisting-a-b → {!  !}
+ℂ-is-T₀ = λ a b indisting-a-b → {! proj₁ indisting-a-b !}
