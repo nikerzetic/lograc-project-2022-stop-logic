@@ -7,6 +7,7 @@
 module CantorSpace where
 
 open import Agda.Primitive
+open import Axiom.Extensionality.Propositional renaming (Extensionality to PropExt)
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality
 open import Data.Bool
@@ -23,8 +24,6 @@ open import Topology.Properties
 
 infix 4 _⊏_
 infix 4 _⊑'_
-
-------------------------------------------------------------------------
 
 private
     variable
@@ -112,6 +111,9 @@ B l a = l ⊏ a
 
 ------------------------------------------------------------------------
 
+postulate
+  fun-ext : ∀ {a b} → PropExt a b
+
 -- Series' head of length n
 _↾_ : (ℕ → Bool) → ℕ → List Bool
 a ↾ zero = a 0 ∷ []
@@ -131,15 +133,24 @@ first-≡ (∷⊏ x∷xs⊏a) = refl
 ↾-⊏-≡ {n = zero} a↾⊏b = first-≡ a↾⊏b
 ↾-⊏-≡ {a} {b} {n = suc n} a↾⊏b = {!    !}
 
--- Head containment implies head equality
-↾-⊏-↾-≡ : ∀ {a b n} → a ↾ n ⊏ b → a ↾ n ≡ b ↾ n
-↾-⊏-↾-≡ {n = zero} a↾n⊏b = {!   !}
-↾-⊏-↾-≡ {n = suc n} a↾n⊏b = {!  first-≡ a↾n⊏b !}
-
--- Inductive series equality
-∀-↾-≡-↾-≡ : ∀ {a b} → (∀ {n} → a ↾ n ≡ b ↾ n) → a ≡ b
-∀-↾-≡-↾-≡ ∀n-a↾n≡b↾n = {!   !}
-
 -- Proof that the Cantor space is T₀
 ℂ-is-T₀ : is-T₀ (ℕ → Bool) τᶜ
-ℂ-is-T₀ = λ a b indisting-a-b → {! proj₁ indisting-a-b !}
+ℂ-is-T₀ = λ a b indisting-a-b 
+    → fun-ext (λ n → pointwise-equality a b n 
+        ((proj₁ indisting-a-b) (B (a ↾ n)) 
+            (↾-open {a = a} {n = n}) 
+            (↾-⊏ {a = a} {n = n})))
+            -- ??? To bi se najbrz dalo lepse napisati - z redefinicijo zgornjih funkcij (↾-open ↾-⊏)
+
+    where 
+        ↾-open : ∀ {a n} → topology.Open τᶜ (B (a ↾ n))
+        ↾-open {a} {n} = λ x∈B↾ 
+            → (a ↾ n) , 
+                (λ y y∈B↾ → y∈B↾) , 
+                x∈B↾
+
+        pointwise-equality : (x : ℕ → Bool) → (y : ℕ → Bool) → (n : ℕ) 
+            → y ∈ B (x ↾ n) -- x ↑ n ⊏ y
+            → x n ≡ y n
+        pointwise-equality x y n y∈B↾ = ↾-⊏-≡ {a = x} {b = y} {n = n} y∈B↾
+
