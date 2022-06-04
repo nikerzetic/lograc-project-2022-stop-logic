@@ -133,6 +133,8 @@ first-≡ (∷⊏ x∷xs⊏a) = refl
 shift-suc : ∀ {n} → (a b : ℕ → Bool) → shift a n ≡ shift b n → a (suc n) ≡ b (suc n)
 shift-suc {n} a b ↓an≡↓bn = ↓an≡↓bn
 
+-- ??? Are all this lemas neccesary?
+
 -- Head equality implies pointwise equality
 -- ↾-⊏-≡ : ∀ {a b n} → a ↾ (suc n) ⊏ b → a n ≡ b n
 ↾-⊏-≡ : ∀ {a b n} → a ↾ n ⊏ b → a n ≡ b n
