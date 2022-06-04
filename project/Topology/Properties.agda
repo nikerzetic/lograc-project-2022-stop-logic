@@ -18,9 +18,9 @@ open import Topology.Core
 
 ------------------------------------------------------------------------
 
-variable
-
-    ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ ℓ₅ : Level
+private
+    variable
+        ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ ℓ₅ : Level
 
 -- Sets separated by neighbourhoods 
 separated-from : {X : Set ℓ₀} {τ : topology ℓ₁ ℓ₂ X} 
@@ -40,17 +40,17 @@ separated {ℓ₁ = ℓ₁} {ℓ₅ = ℓ₅} {X = X} {τ = τ} A B =
 indistinguishable : {X : Set ℓ₀} {τ : topology ℓ₁ ℓ₂ X} 
     → (x : X) → (y : X) → Set (ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂)
 indistinguishable {ℓ₁ = ℓ₁} {X = X} {τ = τ} x y = 
-    ∀ (U : ℙ ℓ₁ X) → topology.Open τ U → x ∈ U → y ∈ U 
-    × ∀ (V : ℙ ℓ₁ X) → topology.Open τ V → y ∈ V → x ∈ V
+    (∀ (U : ℙ ℓ₁ X) → topology.Open τ U → x ∈ U → y ∈ U)
+    × (∀ (V : ℙ ℓ₁ X) → topology.Open τ V → y ∈ V → x ∈ V)
 
 ------------------------------------------------------------------------
 -- Separation axioms
 
 -- Kolmogorov space
-is-T₀ : (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → Set (lsuc ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂)
+is-T₀ : (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → Set (ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂)
 is-T₀ X τ = ∀ (x y : X) 
-    → ¬ singleton x ≡ singleton y
-    → ¬ indistinguishable {τ = τ} x y
+    → indistinguishable {τ = τ} x y
+    → x ≡ y
 
 -- Symetric space
 is-R₀ : (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → Set (ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂ ⊔ ℓ₃)
