@@ -45,8 +45,6 @@ data _⊏_ : REL (List Bool) (ℕ → Bool) lzero where
     []⊏ : ∀ {a}                               → [] ⊏ a
     ∷⊏  : ∀ {a} {l : List Bool} → l ⊏ shift a → a 0 ∷ l ⊏ a
 
-    -- Implicitnost l ???
-
 -- Transitivity for "heads" relations
 ⊑'-⊏ : ∀ {l₁ l₂ a} → (l₁⊑'l₂ : l₁ ⊑' l₂) → (l₂⊏a : l₂ ⊏ a) → l₁ ⊏ a
 ⊑'-⊏ []⊑' l₂⊏a = []⊏
@@ -130,16 +128,11 @@ first-≡ (∷⊏ x∷xs⊏a) = refl
 ∷-⊏-shift : ∀ {x xs a} → x ∷ xs ⊏ a → xs ⊏ shift a
 ∷-⊏-shift (∷⊏ x∷xs⊏a) = x∷xs⊏a
 
-shift-suc : ∀ {n} → (a b : ℕ → Bool) → shift a n ≡ shift b n → a (suc n) ≡ b (suc n)
-shift-suc {n} a b ↓an≡↓bn = ↓an≡↓bn
-
--- ??? Are all this lemas neccesary?
-
 -- Head equality implies pointwise equality
 -- ↾-⊏-≡ : ∀ {a b n} → a ↾ (suc n) ⊏ b → a n ≡ b n
 ↾-⊏-≡ : ∀ {a b n} → a ↾ n ⊏ b → a n ≡ b n
 ↾-⊏-≡ {n = zero} a↾⊏b = first-≡ a↾⊏b
-↾-⊏-≡ {a} {b} {n = suc n} a↾⊏b = shift-suc a b (↾-⊏-≡ (∷-⊏-shift a↾⊏b))
+↾-⊏-≡ {a} {b} {n = suc n} a↾⊏b = ↾-⊏-≡ (∷-⊏-shift a↾⊏b)
 
 -- Proof that the Cantor space is T₀
 ℂ-is-T₀ : is-T₀ (ℕ → Bool) τᶜ
@@ -158,4 +151,3 @@ shift-suc {n} a b ↓an≡↓bn = ↓an≡↓bn
             → y ∈ B (x ↾ n) -- x ↑ n ⊏ y
             → x n ≡ y n
         pointwise-equality x y n y∈B↾ = ↾-⊏-≡ {a = x} {b = y} {n = n} y∈B↾
-

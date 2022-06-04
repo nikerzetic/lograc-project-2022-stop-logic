@@ -29,8 +29,7 @@ open-cover : {ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ : Level} {I : Set ℓ₀} {X : 
 open-cover {I = I} {τ = τ} S Y = (cover S Y × Σ[ m ∈ I ] topology.Open τ (S m))
     -- Pravilno povedano, da mnozice odprte
 
--- Subcover of an open cover
-subcover : {ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ : Level} {I J : Set ℓ₀} {X : Set ℓ₁} {τ : topology ℓ₂ ℓ₃ X}
-    → (T : J → ℙ ℓ₃ X) → (S : I → ℙ ℓ₃ X) → (Y : ℙ ℓ₄ X) → {!   !}
-subcover {I = I} {J = J} T S Y = {! cover T Y × ∀ m → m ∈ J → Σ[ n ∈ I ] T m ≡ S n !}
-
+-- -- Subcover of an open cover
+-- subcover : {ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ : Level} {I J : Set ℓ₀} {X : Set ℓ₁} {τ : topology ℓ₂ ℓ₃ X}
+--     → (T : J → ℙ ℓ₃ X) → (S : I → ℙ ℓ₃ X) → (Y : ℙ ℓ₄ X) → {!   !}
+-- subcover {I = I} {J = J} T S Y = {! cover T Y × ∀ m → m ∈ J → Σ[ n ∈ I ] T m ≡ S n !}
