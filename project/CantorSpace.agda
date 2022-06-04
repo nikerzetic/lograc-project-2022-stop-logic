@@ -127,11 +127,17 @@ a ↾ suc n = a 0 ∷ ((shift a) ↾ n)
 first-≡ : ∀ {x xs a} → x ∷ xs ⊏ a → x ≡ a 0
 first-≡ (∷⊏ x∷xs⊏a) = refl
 
+∷-⊏-shift : ∀ {x xs a} → x ∷ xs ⊏ a → xs ⊏ shift a
+∷-⊏-shift (∷⊏ x∷xs⊏a) = x∷xs⊏a
+
+shift-suc : ∀ {n} → (a b : ℕ → Bool) → shift a n ≡ shift b n → a (suc n) ≡ b (suc n)
+shift-suc {n} a b ↓an≡↓bn = ↓an≡↓bn
+
 -- Head equality implies pointwise equality
 -- ↾-⊏-≡ : ∀ {a b n} → a ↾ (suc n) ⊏ b → a n ≡ b n
 ↾-⊏-≡ : ∀ {a b n} → a ↾ n ⊏ b → a n ≡ b n
 ↾-⊏-≡ {n = zero} a↾⊏b = first-≡ a↾⊏b
-↾-⊏-≡ {a} {b} {n = suc n} a↾⊏b = {!    !}
+↾-⊏-≡ {a} {b} {n = suc n} a↾⊏b = shift-suc a b (↾-⊏-≡ (∷-⊏-shift a↾⊏b))
 
 -- Proof that the Cantor space is T₀
 ℂ-is-T₀ : is-T₀ (ℕ → Bool) τᶜ
