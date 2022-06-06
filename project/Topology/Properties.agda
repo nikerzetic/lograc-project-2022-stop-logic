@@ -8,9 +8,6 @@ module Topology.Properties where
 
 open import Agda.Primitive
 open import Relation.Binary.PropositionalEquality
-open import Data.Bool
-open import Data.Empty
-open import Data.Unit
 open import Data.Product
 open import Relation.Nullary
 open import Topology.PowerSet
@@ -22,13 +19,13 @@ private
     variable
         ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ ℓ₅ : Level
 
--- Sets separated by neighbourhoods 
+-- Property that for sets A and B there exist neigbourhood U of A such that U ∩ B is empty  
 separated-from : {X : Set ℓ₀} {τ : topology ℓ₁ ℓ₂ X} 
     → (A : ℙ ℓ₃ X) → (B : ℙ ℓ₄ X) → Set (ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂ ⊔ ℓ₃ ⊔ ℓ₄ ⊔ ℓ₅)
 separated-from {ℓ₁ = ℓ₁} {ℓ₅ = ℓ₅} {X = X} {τ = τ} A B = 
     Σ[ U ∈ ℙ ℓ₁ X ] (topology.Open τ U × A ⊆ U × (U ∩ B ⊆ empty {k = ℓ₅} X))
 
--- Strictly separated sets
+-- Same as above for both A and B. Aditionaly neigbourhoods of A and B does not intersect
 separated : {X : Set ℓ₀} {τ : topology ℓ₁ ℓ₂ X} 
     → (A : ℙ ℓ₃ X) → (B : ℙ ℓ₄ X) → Set (ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂ ⊔ ℓ₃ ⊔ ℓ₄ ⊔ ℓ₅)
 separated {ℓ₁ = ℓ₁} {ℓ₅ = ℓ₅} {X = X} {τ = τ} A B = 
@@ -78,7 +75,7 @@ is-T₂ {ℓ₃ = ℓ₃} X τ = ∀ (x y : X)
     → ¬ singleton x ≡ singleton y
     → separated {ℓ₅ = ℓ₃} {τ = τ} (singleton x) (singleton y)
 
--- Regular space
+-- Regular space - There exists disjoint neigbourhoods for a closed set Y ⊆ X and a point x ∈ X with x ∉ Y.
 is-regular : (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → Set (ℓ₀ ⊔ lsuc ℓ₁ ⊔ ℓ₂ ⊔ ℓ₃)
 is-regular {ℓ₁ = ℓ₁} {ℓ₃ = ℓ₃} X τ = ∀ (x : X) → (Y : ℙ ℓ₁ X) 
     → topology.Open τ (Y ᶜ) → x ∉ Y

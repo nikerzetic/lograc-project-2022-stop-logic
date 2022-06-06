@@ -8,9 +8,6 @@ module Topology.PowerSet where
 
 open import Agda.Primitive
 open import Relation.Binary.PropositionalEquality
-open import Data.Bool
-open import Data.Empty
-open import Data.Unit
 open import Data.Product
 open import Relation.Nullary
 
@@ -51,6 +48,7 @@ S ⊆ T = ∀ x → x ∈ S → x ∈ T
 _ᶜ : {ℓ k : Level} {A : Set ℓ} → ℙ k A → ℙ k A
 _ᶜ S = λ x → x ∉ S
 
+-- If element of subset of V, then element of V
 ∈-⊆-∈ : {ℓ k m : Level} {A : Set ℓ} {U : ℙ k A} {V : ℙ m A} {x : A}
   → (x∈U : x ∈ U) → (U⊆V : U ⊆ V) → x ∈ V
 ∈-⊆-∈ {x = x} x∈U U⊆V = U⊆V x x∈U

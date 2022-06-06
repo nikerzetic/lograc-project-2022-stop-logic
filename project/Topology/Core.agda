@@ -10,10 +10,7 @@ module Topology.Core where
 
 open import Agda.Primitive
 open import Topology.PowerSet
-open import Relation.Binary.PropositionalEquality
 open import Data.Product
-open import Data.Unit
-open import Data.Empty
 
 ------------------------------------------------------------------------
 -- Topology on a set X
@@ -27,10 +24,11 @@ record topology {ℓ} (k m : Level) (X : Set ℓ) : Setω₁ where
 
 open topology public
 
+-- Truth on any level
 data ⊤ℓ {ℓ : Level} : Set ℓ where 
     ⊤ℓ-intro : ⊤ℓ
 
-discrete-topology : {ℓ k : Level} (X : Set ℓ) → topology k lzero X
+discrete-topology : {ℓ k : Level} (X : Set ℓ) → topology k (ℓ ⊔ k) X
 discrete-topology X =
     record
         { Open = λ _ → ⊤ℓ
@@ -108,8 +106,3 @@ base {ℓ = ℓ} {k = k} {j = j} {X = X} {I = I} B Bcovers Bbase =
                 ∈-member-∈-union {S = S} (∈-⊆-∈ x∈Bi (B-⊆ 
                     (∈-union-∈-member {S = S} x∈US) (OpenSm (union-index-of {S = S} x∈US))))) , 
             ∈-B (∈-union-∈-member {S = S} x∈US) (OpenSm (union-index-of {S = S} x∈US)))
-
--- -- Topological space
--- topological-space : {ℓ₀ ℓ₁ ℓ₂ : Level} 
---     → (X : Set ℓ₀) → (τ : topology ℓ₁ ℓ₂ X) → {!   !}
--- topological-space X τ = X × τ

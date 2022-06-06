@@ -15,7 +15,6 @@ open import Data.Nat
 open import Data.List
 open import Data.Product
 open import Data.Sum
-open import Function.Construct.Composition
 open import Topology.PowerSet
 open import Topology.Core
 open import Topology.Properties

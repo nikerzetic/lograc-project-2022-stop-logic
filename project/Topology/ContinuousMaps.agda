@@ -16,43 +16,46 @@ open Eq.≡-Reasoning using (begin_; _≡⟨⟩_; step-≡; step-≡˘; _∎)
 
 ------------------------------------------------------------------------
 
-_∘_ : {ℓ k m : Level} {X : Set ℓ} {Y : Set k} {Z : Set m} → (g : Y → Z) → (f : X → Y) → (X → Z)
+private
+    variable
+        ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ ℓ₅ ℓ₆ : Level
+
+------------------------------------------------------------------------
+
+-- A composition of maps
+_∘_ : {X : Set ℓ₀} {Y : Set ℓ₁} {Z : Set ℓ₂} → (g : Y → Z) → (f : X → Y) → (X → Z)
 g ∘ f = λ U → g (f U)
 
-
-preimage : {ℓ k m : Level} {X : Set ℓ} {Y : Set k}
+preimage : {X : Set ℓ₀} {Y : Set ℓ₁}
    → (f : X → Y)
-   → (S : ℙ m Y)
-   → ℙ m X
+   → (S : ℙ ℓ₂ Y)
+   → ℙ ℓ₂ X
 preimage f S = S ∘ f
 
 -- Proof that (f∘g)(U) = f(g(U))
-preimageCompose : {ℓ k m n : Level}
-    {X : Set ℓ} {Y : Set k} {Z : Set m}
+preimageCompose : {X : Set ℓ₀} {Y : Set ℓ₁} {Z : Set ℓ₂}
     (f : X → Y) (g : Y → Z)
-    (U : ℙ n Z)
+    (U : ℙ ℓ₃ Z)
     → preimage (g ∘ f) U ≡ preimage f (preimage g U)
 preimageCompose f g U = refl
 
 -- Image of a map
-image : {ℓ k m : Level}
-    {X : Set ℓ} {Y : Set k}
+image : {X : Set ℓ₀} {Y : Set ℓ₁}
     → (f : X → Y)
-    → ℙ m X
-    → ℙ (ℓ ⊔ k ⊔ m) Y
+    → ℙ ℓ₂ X
+    → ℙ (ℓ₀ ⊔ ℓ₁ ⊔ ℓ₂) Y
 image {X = X} {Y = Y} f A y = Σ[ x ∈ X ] (A x × y ≡ (f x))
 
--- Definition for continuous map
-isContinuous : {ℓ k m n₁ n₂ : Level}
-    {X : Set ℓ} {Y : Set k}
-    (T₁ : topology m n₁ X) (T₂ : topology m n₂ Y)
+-- Definition of continuous map
+isContinuous : {X : Set ℓ₀} {Y : Set ℓ₁}
+    (T₁ : topology ℓ₂ ℓ₃ X) (T₂ : topology ℓ₂ ℓ₄ Y)
     (f : X → Y)
-    → Set (k ⊔ lsuc m ⊔ n₁ ⊔ n₂)
+    → Set (ℓ₁ ⊔ lsuc ℓ₂ ⊔ ℓ₃ ⊔ ℓ₄)
 isContinuous T₁ T₂ f = ∀ U → U ∈ (Open T₂) → (preimage f U) ∈ (Open T₁)
 
--- Proof that composition of continuous maps is continuous map
-compositionOfCountinuousIsContinuous : {ℓ k m j n₁ n₂ n₃ : Level} {X : Set ℓ} {Y : Set k} {Z : Set m}
-  {T₁ : topology j n₁ X} {T₂ : topology j n₂ Y} {T₃ : topology j n₃ Z}
+-- Proof that composition of continuous maps is a continuous map
+compositionOfCountinuousIsContinuous : {X : Set ℓ₀} {Y : Set ℓ₁} {Z : Set ℓ₂}
+  {T₁ : topology ℓ₆ ℓ₃ X} {T₂ : topology ℓ₆ ℓ₄ Y} {T₃ : topology ℓ₆ ℓ₅ Z}
   {f : X → Y} {g : Y → Z}
   → isContinuous T₁ T₂ f
   → isContinuous T₂ T₃ g
@@ -61,35 +64,29 @@ compositionOfCountinuousIsContinuous {f = f} {g = g} fCont gCont U U⊆ᵒZ =
     fCont (preimage g U) (gCont U U⊆ᵒZ)
 
 -- Identity map on a set X
-id_ : {ℓ : Level}
-    → (X : Set ℓ)
-    → (X → X)
+id_ : (X : Set ℓ₀) → (X → X)
 id X = λ (x : X) → x
 
 -- Proof that identity map is continuous
-idIsContinuous : {ℓ m n : Level} {X : Set ℓ}
-    {T : topology m n X}
+idIsContinuous : {X : Set ℓ₀} {T : topology ℓ₁ ℓ₂ X}
     → isContinuous T T (id X)
 idIsContinuous = λ _ U⊆ᵒX → U⊆ᵒX
 
 -- Constant map from a set X to * ∈ Y
-constF : {ℓ k : Level} {X : Set ℓ} {Y : Set k}
+constF : {X : Set ℓ₀} {Y : Set ℓ₁}
     → (* : Y)
     → (X → Y)
 constF * = λ x → *
 
 -- Proof that constant map is continuous
-emptyFullPreimage : {ℓ k m : Level} {X : Set ℓ} {Y : Set k} (U : ℙ m Y) (* : Y) → ℙ (k ⊔ m) X
-emptyFullPreimage U * = preimage (constF *) (U ∩ singleton *)
-
-constIsContinuous : {ℓ k m n : Level} {X : Set ℓ} {Y : Set k}
-    {T₁ : topology m n X} {T₂ : topology m n Y}
+constIsContinuous : {X : Set ℓ₀} {Y : Set ℓ₁}
+    {T₁ : topology ℓ₂ ℓ₃ X} {T₂ : topology ℓ₂ ℓ₃ Y}
     → (* : Y)
     → isContinuous T₁ T₂ (constF *)
-constIsContinuous {ℓ} {k} {m} {n} {X = X} {T₁ = T₁} {T₂ = T₂} * U Uopen =
+constIsContinuous {ℓ₂ = ℓ₂} {X = X} {T₁ = T₁} {T₂ = T₂} * U Uopen =
   subst (Open T₁) V≡pre OpenV
   where 
-    V : ℙ m X
+    V : ℙ ℓ₂ X
     V = union {I = U *} {A = X} λ _ → full X
 
     OpenV : Open T₁ V
@@ -98,49 +95,43 @@ constIsContinuous {ℓ} {k} {m} {n} {X = X} {T₁ = T₁} {T₂ = T₂} * U Uope
     V≡pre : V ≡ (λ _ → U *)
     V≡pre = ⊆-⊇-≡ V (λ _ → U *) (λ x (x∈U* , _) → x∈U*) λ x p → p , full-intro
     
-
--- vsaka preslikava iz prostora z diskretno topologijo je zvezna
-fromDiscreteContinuous : {ℓ k m n : Level} {X : Set ℓ} {Y : Set k}
-    → {T : topology m n Y}
+-- Proof that every map from a space with discrete topology is continuous
+fromDiscreteContinuous : {X : Set ℓ₀} {Y : Set ℓ₁} {T : topology ℓ₂ ℓ₃ Y}
     → (f : X → Y)
     → isContinuous (discrete-topology X) T f
 fromDiscreteContinuous f = λ U U⊆ᵒY → ⊤ℓ-intro
 
-
--- vsaka preslikava v prostor s trivialno topologijo je zvezna
--- Za index set uporabljamo "Y ⊆ U"
--- toIndiscreteContinuous : {m : Level} {X : Set m} {Y : Set m}
---     → {T : topology m lzero X}
---     → (f : X → Y)
---     → isContinuous T (indiscrete-topology Y) f
--- toIndiscreteContinuous {m} {X = X} {Y = Y} {T = T} f U U⊆ᵒY =  
---     subst (Open T) V≡pre-fU OpenV
---     where 
---     V : ℙ m X
---     V = union {I = (full {k = m} Y) ⊆ U} λ _ → full X
-
---     OpenV : Open T V
---     OpenV = union-open T (λ _ → full X) λ i → full-open T
-
---     V≡pre-fU : V ≡ (λ x → U (f x))
---     V≡pre-fU = ⊆-⊇-≡ 
---         V 
---         (λ x → U (f x)) 
---         (λ x x∈V → proj₁ x∈V (f x) full-intro) 
---         (λ x p → (λ y _ → U⊆ᵒY (f x) p y) , full-intro)
-
--- Same thing, with index set "there exists an element in U". 
--- Here, we can have different level of set X
-toIndiscreteContinuous : {ℓ m : Level} {X : Set ℓ} {Y : Set m}
-    → {T : topology m lzero X}
+-- Proof that every map to trivial topology is continuous
+-- index set : codomain is subset of open set
+toIndiscreteContinuous : {X : Set ℓ₀} {Y : Set ℓ₀} {T : topology ℓ₀ ℓ₁ X}
     → (f : X → Y)
     → isContinuous T (indiscrete-topology Y) f
-toIndiscreteContinuous {ℓ} {m} {X = X} {Y = Y} {T = T} f U U⊆ᵒY =  
-    -- subst (Open T) V≡pre-fU OpenV
-    subst (Open T) V≡pre-fU (OpenV)
+toIndiscreteContinuous {ℓ₀} {X = X} {Y = Y} {T = T} f U U⊆ᵒY =  
+    subst (Open T) V≡pre-fU OpenV
     where 
-    V : ℙ m X
-    V = union {I = Σ[ y ∈ Y ] y ∈ U} λ _ → full {k = m} X
+    V : ℙ ℓ₀ X
+    V = union {I = (full {k = ℓ₀} Y) ⊆ U} λ _ → full X
+
+    OpenV : Open T V
+    OpenV = union-open T (λ _ → full X) λ i → full-open T
+
+    V≡pre-fU : V ≡ (λ x → U (f x))
+    V≡pre-fU = ⊆-⊇-≡ 
+        V 
+        (λ x → U (f x)) 
+        (λ x x∈V → proj₁ x∈V (f x) full-intro) 
+        (λ x p → (λ y _ → U⊆ᵒY (f x) p y) , full-intro)
+
+-- Proof that every map to trivial topology is continuous second edition
+-- index set : there exists an element in open set
+toIndiscreteContinuous' : {X : Set ℓ₀} {Y : Set ℓ₁} {T : topology ℓ₁ ℓ₂ X}
+    → (f : X → Y)
+    → isContinuous T (indiscrete-topology Y) f
+toIndiscreteContinuous' {ℓ₁ = ℓ₁} {X = X} {Y = Y} {T = T} f U U⊆ᵒY =  
+    subst (Open T) V≡pre-fU OpenV
+    where 
+    V : ℙ ℓ₁ X
+    V = union {I = Σ[ y ∈ Y ] y ∈ U} λ _ → full {k = ℓ₁} X
 
     OpenV : Open T V
     OpenV = union-open T (λ _ → full X) (λ i → full-open T)
@@ -152,21 +143,21 @@ toIndiscreteContinuous {ℓ} {m} {X = X} {Y = Y} {T = T} f U U⊆ᵒY =
         (λ x ((p₁ , p₂) , q) → U⊆ᵒY p₁ p₂ (f x))
         (λ x p → (f x , p) , full-intro)
 
-
 -- Definition of a homeomorphism
-isHomeomorphism : {ℓ k m n o : Level} {X : Set ℓ} {Y : Set k}
-    → (T₁ : topology m n X) (T₂ : topology m o Y) 
+isHomeomorphism : {X : Set ℓ₀} {Y : Set ℓ₁}
+    → (T₁ : topology ℓ₂ ℓ₃ X) (T₂ : topology ℓ₂ ℓ₄ Y) 
     → (f : X → Y)
     → (g : Y → X)
-    → Set (ℓ ⊔ k ⊔ lsuc m ⊔ n ⊔ o)
-isHomeomorphism {ℓ = ℓ} {k = k} {X = X} {Y = Y} T₁ T₂ f g = 
+    → Set (ℓ₀ ⊔ ℓ₁ ⊔ lsuc ℓ₂ ⊔ ℓ₃ ⊔ ℓ₄)
+isHomeomorphism {ℓ₀ = ℓ₀} {ℓ₁ = ℓ₁} {X = X} {Y = Y} T₁ T₂ f g = 
     (isContinuous T₁ T₂ f) ×
     (isContinuous T₂ T₁ g) ×
-    (∀ x → x ∈ full {k = ℓ} X → (g ∘ f) x ≡ x) × 
-    (∀ y → y ∈ full {k = k} Y → (f ∘ g) y ≡ y)
+    (∀ x → x ∈ full {k = ℓ₀} X → (g ∘ f) x ≡ x) × 
+    (∀ y → y ∈ full {k = ℓ₁} Y → (f ∘ g) y ≡ y)
 
-inverseOfHomeoIsHomeo : {ℓ k m n o : Level} {X : Set ℓ} {Y : Set k}
-    → {T₁ : topology m n X} {T₂ : topology m o Y}
+-- Construction of an inverse of a homeomorphism
+inverseOfHomeoIsHomeo : {X : Set ℓ₀} {Y : Set ℓ₁}
+    → {T₁ : topology ℓ₂ ℓ₃ X} {T₂ : topology ℓ₂ ℓ₄ Y}
     → (f : X → Y)
     → (g : Y → X)
     → isHomeomorphism T₁ T₂ f g
@@ -177,8 +168,8 @@ inverseOfHomeoIsHomeo f g (fCont , gCont , gfx=x , fgx=x) =
     , ((λ x _ → fgx=x x full-intro) 
     , (λ y _ → gfx=x y full-intro)))
 
-idIsHomeo : {ℓ m n : Level} {X : Set ℓ}
-    → {T : topology m n X}
+-- Proof that identity map is a homeomorphism
+idIsHomeo : {X : Set ℓ₀} {T : topology ℓ₁ ℓ₂ X}
     → isHomeomorphism T T (id X) (id X)
 idIsHomeo {X = X} {T = T} = 
       idIsContinuous {X = X} {T = T} 
@@ -186,9 +177,9 @@ idIsHomeo {X = X} {T = T} =
     , ((λ x _ → refl) 
     , λ y _ → refl))
 
-compositionOfHomeoIsHomeo : {a b c d e i j : Level}
-    → {X : Set a} {Y : Set b} {Z : Set c}
-    → {T₁ : topology d e X} {T₂ : topology d i Y} {T₃ : topology d j Z}
+-- Proof that composition of homeomorphisms is again homeomorphism
+compositionOfHomeoIsHomeo : {X : Set ℓ₀} {Y : Set ℓ₁} {Z : Set ℓ₂}
+    → {T₁ : topology ℓ₃ ℓ₄ X} {T₂ : topology ℓ₃ ℓ₅ Y} {T₃ : topology ℓ₃ ℓ₆ Z}
     → (f : X → Y) (g : Y → Z)
     → (f-1 : Y → X) (g-1 : Z → Y)
     → isHomeomorphism T₁ T₂ f f-1
@@ -218,3 +209,4 @@ compositionOfHomeoIsHomeo
       g (g-1 y) ≡⟨ gg-1x=x y full-intro ⟩  
       y
     ∎
+ 
