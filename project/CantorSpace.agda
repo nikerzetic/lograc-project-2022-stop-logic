@@ -109,7 +109,7 @@ B l a = l ⊏ a
 ------------------------------------------------------------------------
 
 postulate
-  fun-ext : ∀ {a b} → PropExt a b
+  prop-ext : ∀ {a b} → PropExt a b
 
 -- Series' head of length n
 _↾_ : (ℕ → Bool) → ℕ → List Bool
@@ -136,7 +136,7 @@ first-≡ (∷⊏ x∷xs⊏a) = refl
 -- Proof that the Cantor space is T₀
 ℂ-is-T₀ : is-T₀ (ℕ → Bool) τᶜ
 ℂ-is-T₀ = λ a b indisting-a-b 
-    → fun-ext (λ n → pointwise-equality a b n 
+    → prop-ext (λ n → pointwise-equality a b n 
         ((proj₁ indisting-a-b) (B (a ↾ n)) (↾-open a n) (↾-⊏ a n)))
 
     where 
