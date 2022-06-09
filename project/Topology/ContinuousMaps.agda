@@ -21,9 +21,8 @@ private
         ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ ℓ₅ ℓ₆ : Level
 
 ------------------------------------------------------------------------
-
--- A composition of maps
-_∘_ : {X : Set ℓ₀} {Y : Set ℓ₁} {Z : Set ℓ₂} → (g : Y → Z) → (f : X → Y) → (X → Z)
+-- composition of two maps
+_∘_ : {ℓ₀ ℓ₁ ℓ₂ : Level} {X : Set ℓ₀} {Y : Set ℓ₁} {Z : Set ℓ₂} → (g : Y → Z) → (f : X → Y) → (X → Z)
 g ∘ f = λ U → g (f U)
 
 preimage : {X : Set ℓ₀} {Y : Set ℓ₁}

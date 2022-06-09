@@ -18,6 +18,7 @@ open import Data.Sum
 open import Topology.PowerSet
 open import Topology.Core
 open import Topology.Properties
+open import Topology.ContinuousMaps
 
 ------------------------------------------------------------------------
 
@@ -150,3 +151,88 @@ first-≡ (∷⊏ x∷xs⊏a) = refl
             → y ∈ B (x ↾ n) -- x ↑ n ⊏ y
             → x n ≡ y n
         pointwise-equality x y n y∈B↾ = ↾-⊏-≡ {a = x} {b = y} {n = n} y∈B↾
+
+
+--------------------------------------------------------------
+-- ℂ ⊎ ℂ ≈ ℂ 
+
+-- first we define topology on X ⊎ Y
+topologyOn-X⊎Y : {ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ : Level} 
+    → {X : Set ℓ₀} {Y : Set ℓ₁}  
+    → (T₁ : topology ℓ₂ ℓ₃ X) (T₂ : topology ℓ₂ ℓ₄ Y)
+    → topology ℓ₂ (ℓ₃ Agda.Primitive.⊔ ℓ₄) (X ⊎ Y)
+topologyOn-X⊎Y {ℓ₀} {ℓ₁} {ℓ₂} {ℓ₃} {ℓ₄} {X = X} {Y = Y} T₁ T₂ = record
+    { Open = λ U → Open T₁ (λ x → U (inj₁ x)) × Open T₂ λ y → U (inj₂ y)
+    ; ∅-open = ∅-open T₁' , ∅-open T₂'
+    ; full-open = full-open T₁' , full-open T₂'
+    ; ∩-open = λ U V openU openV → 
+        (∩-open T₁' U V (proj₁ openU)  (proj₁ openV)) , 
+        (∩-open T₂' U V (proj₂ openU)  (proj₂ openV))
+    ; union-open = λ S OpenSi → 
+        union-open T₁' S (λ i → proj₁ (OpenSi i)) ,
+        union-open T₂' S (λ i → proj₂ (OpenSi i)) 
+    }
+    where
+
+    T₁' : topology ℓ₂ ℓ₃ (X ⊎ Y)
+    T₁' = record
+        { Open = λ U → Open T₁ (U ∘ inj₁)
+        ; ∅-open = subst 
+            (Open T₁) 
+            (⊆-⊇-≡ 
+                (empty X) 
+                (λ z → empty (X ⊎ Y) (inj₁ z)) 
+                (λ x ()) 
+                λ x ()) 
+            (∅-open T₁)
+        ; full-open = subst 
+            (Open T₁) 
+            (⊆-⊇-≡ 
+                (full X) 
+                (λ z → full (X ⊎ Y) (inj₁ z)) 
+                (λ x _ → full-intro) 
+                λ x _ → full-intro) 
+            (full-open T₁)
+        ; ∩-open = λ U V OpenU OpenV → 
+            ∩-open T₁ (λ x → U (inj₁ x)) (λ x → V (inj₁ x)) OpenU OpenV
+        ; union-open = λ S OpenSi → 
+            union-open T₁ (λ i x → S i (inj₁ x)) OpenSi
+        } 
+
+    T₂' : topology ℓ₂ ℓ₄ (X ⊎ Y)
+    T₂' = record
+        { Open = λ U → Open T₂ (U ∘ inj₂)
+        ; ∅-open = subst 
+            (Open T₂) 
+            (⊆-⊇-≡ 
+                (empty Y) 
+                (λ z → empty (X ⊎ Y) (inj₂ z)) 
+                (λ x ()) 
+                λ x ()) 
+            (∅-open T₂)
+        ; full-open = subst 
+            (Open T₂) 
+            (⊆-⊇-≡ 
+                (full Y) 
+                (λ z → full (X ⊎ Y) (inj₂ z)) 
+                (λ x _ → full-intro) 
+                λ x _ → full-intro) 
+            (full-open T₂)
+        ; ∩-open = λ U V OpenU OpenV → 
+            ∩-open T₂ (λ y → U (inj₂ y)) (λ y → V (inj₂ y)) OpenU OpenV
+        ; union-open = λ S OpenSi → 
+            union-open T₂ (λ i y → S i (inj₂ y)) OpenSi
+        } 
+
+
+f : ((ℕ → Bool) ⊎ (ℕ → Bool)) → (ℕ → Bool)
+f (inj₁ a) = {!   !}
+f (inj₂ b) = {!   !}
+
+g : (ℕ → Bool) → ((ℕ → Bool) ⊎ (ℕ → Bool))
+g = {!   !} 
+
+ℂ⊎ℂ≈ℂ : (f : ((ℕ → Bool) ⊎ (ℕ → Bool)) → (ℕ → Bool))
+    → (g : (ℕ → Bool) → ((ℕ → Bool) ⊎ (ℕ → Bool)))
+    → isHomeomorphism (topologyOn-X⊎Y τᶜ τᶜ) τᶜ f g
+ℂ⊎ℂ≈ℂ f g = {!   !} , ({!   !} , ((λ x x₁ → {!   !}) , λ y x → {!   !}))

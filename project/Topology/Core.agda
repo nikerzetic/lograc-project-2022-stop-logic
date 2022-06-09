@@ -11,6 +11,7 @@ module Topology.Core where
 open import Agda.Primitive
 open import Topology.PowerSet
 open import Data.Product
+open import Data.Sum
 
 ------------------------------------------------------------------------
 -- Topology on a set X
@@ -60,7 +61,7 @@ base : {ℓ k j : Level} {X : Set ℓ} {I : Set k}
 base {ℓ = ℓ} {k = k} {j = j} {X = X} {I = I} B Bcovers Bbase =
   record
     { Open = Open'
-    ; ∅-open = λ { () }
+    ; ∅-open = λ ()
     ; full-open = λ {x} _ → (proj₁ (Bcovers x)) , ((λ y _ → full-intro) , proj₂ (Bcovers x))
     ; ∩-open = ∩-open'
     ; union-open = union-open'
