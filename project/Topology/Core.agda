@@ -12,6 +12,7 @@ open import Agda.Primitive
 open import Topology.PowerSet
 open import Data.Product
 open import Data.Sum
+open import Relation.Binary.PropositionalEquality
 
 ------------------------------------------------------------------------
 -- Topology on a set X
@@ -107,3 +108,75 @@ base {ℓ = ℓ} {k = k} {j = j} {X = X} {I = I} B Bcovers Bbase =
                 ∈-member-∈-union {S = S} (∈-⊆-∈ x∈Bi (B-⊆ 
                     (∈-union-∈-member {S = S} x∈US) (OpenSm (union-index-of {S = S} x∈US))))) , 
             ∈-B (∈-union-∈-member {S = S} x∈US) (OpenSm (union-index-of {S = S} x∈US)))
+
+-- composition of two maps
+_∘_ : {ℓ₀ ℓ₁ ℓ₂ : Level} {X : Set ℓ₀} {Y : Set ℓ₁} {Z : Set ℓ₂} → (g : Y → Z) → (f : X → Y) → (X → Z)
+g ∘ f = λ U → g (f U)
+
+-- Definition of topology on X ⊎ Y
+topologyOn-X⊎Y : {ℓ₀ ℓ₁ ℓ₂ ℓ₃ ℓ₄ : Level} 
+    → {X : Set ℓ₀} {Y : Set ℓ₁}  
+    → (T₁ : topology ℓ₂ ℓ₃ X) (T₂ : topology ℓ₂ ℓ₄ Y)
+    → topology ℓ₂ (ℓ₃ Agda.Primitive.⊔ ℓ₄) (X ⊎ Y)
+topologyOn-X⊎Y {ℓ₀} {ℓ₁} {ℓ₂} {ℓ₃} {ℓ₄} {X = X} {Y = Y} T₁ T₂ = record
+    { Open = λ U → Open T₁ (λ x → U (inj₁ x)) × Open T₂ λ y → U (inj₂ y)
+    ; ∅-open = ∅-open T₁' , ∅-open T₂'
+    ; full-open = full-open T₁' , full-open T₂'
+    ; ∩-open = λ U V openU openV → 
+        (∩-open T₁' U V (proj₁ openU)  (proj₁ openV)) , 
+        (∩-open T₂' U V (proj₂ openU)  (proj₂ openV))
+    ; union-open = λ S OpenSi → 
+        union-open T₁' S (λ i → proj₁ (OpenSi i)) ,
+        union-open T₂' S (λ i → proj₂ (OpenSi i)) 
+    }
+    where
+
+    T₁' : topology ℓ₂ ℓ₃ (X ⊎ Y)
+    T₁' = record
+        { Open = λ U → Open T₁ (U ∘ inj₁)
+        ; ∅-open = subst 
+            (Open T₁) 
+            (⊆-⊇-≡ 
+                (empty X) 
+                (empty (X ⊎ Y) ∘ inj₁) 
+                (λ x ()) 
+                λ x ()) 
+            (∅-open T₁)
+        ; full-open = subst 
+            (Open T₁) 
+            (⊆-⊇-≡ 
+                (full X) 
+                (full (X ⊎ Y) ∘ inj₁) 
+                (λ x _ → full-intro) 
+                λ x _ → full-intro) 
+            (full-open T₁)
+        ; ∩-open = λ U V OpenU OpenV → 
+            ∩-open T₁ (U ∘ inj₁) (V ∘ inj₁) OpenU OpenV
+        ; union-open = λ S OpenSi → 
+            union-open T₁ (λ i → (S i) ∘ inj₁) OpenSi
+        } 
+
+    T₂' : topology ℓ₂ ℓ₄ (X ⊎ Y)
+    T₂' = record
+        { Open = λ U → Open T₂ (U ∘ inj₂)
+        ; ∅-open = subst 
+            (Open T₂) 
+            (⊆-⊇-≡ 
+                (empty Y) 
+                (empty (X ⊎ Y) ∘ inj₂) 
+                (λ x ()) 
+                λ x ()) 
+            (∅-open T₂)
+        ; full-open = subst 
+            (Open T₂) 
+            (⊆-⊇-≡ 
+                (full Y) 
+                (full (X ⊎ Y) ∘ inj₂) 
+                (λ x _ → full-intro) 
+                λ x _ → full-intro) 
+            (full-open T₂)
+        ; ∩-open = λ U V OpenU OpenV → 
+            ∩-open T₂ (U ∘ inj₂) (V ∘ inj₂) OpenU OpenV
+        ; union-open = λ S OpenSi → 
+            union-open T₂ (λ i → (S i) ∘ inj₂) OpenSi
+        }

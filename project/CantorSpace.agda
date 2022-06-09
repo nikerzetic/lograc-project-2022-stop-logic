@@ -181,7 +181,7 @@ topologyOn-X⊎Y {ℓ₀} {ℓ₁} {ℓ₂} {ℓ₃} {ℓ₄} {X = X} {Y = Y} T�
             (Open T₁) 
             (⊆-⊇-≡ 
                 (empty X) 
-                (λ z → empty (X ⊎ Y) (inj₁ z)) 
+                (empty (X ⊎ Y) ∘ inj₁) 
                 (λ x ()) 
                 λ x ()) 
             (∅-open T₁)
@@ -189,14 +189,14 @@ topologyOn-X⊎Y {ℓ₀} {ℓ₁} {ℓ₂} {ℓ₃} {ℓ₄} {X = X} {Y = Y} T�
             (Open T₁) 
             (⊆-⊇-≡ 
                 (full X) 
-                (λ z → full (X ⊎ Y) (inj₁ z)) 
+                (full (X ⊎ Y) ∘ inj₁) 
                 (λ x _ → full-intro) 
                 λ x _ → full-intro) 
             (full-open T₁)
         ; ∩-open = λ U V OpenU OpenV → 
-            ∩-open T₁ (λ x → U (inj₁ x)) (λ x → V (inj₁ x)) OpenU OpenV
+            ∩-open T₁ (U ∘ inj₁) (V ∘ inj₁) OpenU OpenV
         ; union-open = λ S OpenSi → 
-            union-open T₁ (λ i x → S i (inj₁ x)) OpenSi
+            union-open T₁ (λ i → (S i) ∘ inj₁) OpenSi
         } 
 
     T₂' : topology ℓ₂ ℓ₄ (X ⊎ Y)
@@ -206,7 +206,7 @@ topologyOn-X⊎Y {ℓ₀} {ℓ₁} {ℓ₂} {ℓ₃} {ℓ₄} {X = X} {Y = Y} T�
             (Open T₂) 
             (⊆-⊇-≡ 
                 (empty Y) 
-                (λ z → empty (X ⊎ Y) (inj₂ z)) 
+                (empty (X ⊎ Y) ∘ inj₂) 
                 (λ x ()) 
                 λ x ()) 
             (∅-open T₂)
@@ -214,16 +214,15 @@ topologyOn-X⊎Y {ℓ₀} {ℓ₁} {ℓ₂} {ℓ₃} {ℓ₄} {X = X} {Y = Y} T�
             (Open T₂) 
             (⊆-⊇-≡ 
                 (full Y) 
-                (λ z → full (X ⊎ Y) (inj₂ z)) 
+                (full (X ⊎ Y) ∘ inj₂) 
                 (λ x _ → full-intro) 
                 λ x _ → full-intro) 
             (full-open T₂)
         ; ∩-open = λ U V OpenU OpenV → 
-            ∩-open T₂ (λ y → U (inj₂ y)) (λ y → V (inj₂ y)) OpenU OpenV
+            ∩-open T₂ (U ∘ inj₂) (V ∘ inj₂) OpenU OpenV
         ; union-open = λ S OpenSi → 
-            union-open T₂ (λ i y → S i (inj₂ y)) OpenSi
-        } 
-
+            union-open T₂ (λ i → (S i) ∘ inj₂) OpenSi
+        }
 
 f : ((ℕ → Bool) ⊎ (ℕ → Bool)) → (ℕ → Bool)
 f (inj₁ a) = {!   !}
